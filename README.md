@@ -9,9 +9,7 @@ Before you begin, ensure you have met the following requirements:
 - You have installed [Git](https://git-scm.com/).
 - You have installed [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/).
 - You have installed [Composer](https://getcomposer.org/).
-- You have installed [PHP](https://www.php.net/).
-- You have a web server like [Apache](https://httpd.apache.org/) or [Nginx](https://www.nginx.com/).
-- You have a database server like [MySQL](https://www.mysql.com/) or [PostgreSQL](https://www.postgresql.org/).
+- You have installed [XAMPP](https://www.apachefriends.org/index.html).
 
 ## Installation
 
@@ -70,13 +68,15 @@ Follow these steps to set up the project locally:
 
 ## Running the Application
 
-1. **Start the local development server:**
+1. **Start XAMPP and ensure Apache and MySQL are running.**
+
+2. **Start the local development server:**
 
     ```sh
     php artisan serve
     ```
 
-2. **Open your browser and navigate to:**
+3. **Open your browser and navigate to:**
 
     ```
     http://localhost:8000
@@ -104,4 +104,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Contact
 
-If you want to contact me, you can reach me at [your-email@example.com].
+If you want to contact me, you can reach me at Github.
