@@ -1,0 +1,82 @@
+CREATE DATABASE PlantObservation;
+
+USE PlantObservation;
+
+-- Tabel untuk menyimpan informasi tanaman
+CREATE TABLE Plants (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    species_name VARCHAR(255) NOT NULL,
+    common_name VARCHAR(255)
+);
+
+-- Tabel untuk menyimpan informasi lokasi
+CREATE TABLE Locations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    dusun VARCHAR(255),
+    desa VARCHAR(255),
+    kelurahan VARCHAR(255),
+    kecamatan VARCHAR(255),
+    kabupaten VARCHAR(255),
+    altitude DOUBLE,
+    longitude DOUBLE,
+    latitude DOUBLE
+);
+
+-- Tabel untuk menyimpan informasi waktu pengamatan
+CREATE TABLE Observations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    plant_id INT,
+    location_id INT,
+    observation_date DATE,
+    observation_time TIME,
+    FOREIGN KEY (plant_id) REFERENCES Plants(id),
+    FOREIGN KEY (location_id) REFERENCES Locations(id)
+);
+
+-- Tabel untuk menyimpan data mikroklimat
+CREATE TABLE Microclimates (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    observation_id INT,
+    temperature DOUBLE,
+    humidity DOUBLE,
+    pressure DOUBLE,
+    FOREIGN KEY (observation_id) REFERENCES Observations(id)
+);
+
+-- Tabel untuk menyimpan data herbarium
+CREATE TABLE Herbariums (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    observation_id INT,
+    seed_sample VARCHAR(255),
+    leaf_sample VARCHAR(255),
+    FOREIGN KEY (observation_id) REFERENCES Observations(id)
+);
+
+-- Tabel untuk menyimpan data tanah
+CREATE TABLE Soils (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    observation_id INT,
+    pH DOUBLE,
+    moisture DOUBLE,
+    soil_sample VARCHAR(255),
+    FOREIGN KEY (observation_id) REFERENCES Observations(id)
+);
+
+-- Tabel untuk menyimpan data fisiologi daun
+CREATE TABLE LeafPhysiologies (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    observation_id INT,
+    chlorophyll DOUBLE,
+    nitrogen DOUBLE,
+    leaf_moisture DOUBLE,
+    leaf_temperature DOUBLE,
+    FOREIGN KEY (observation_id) REFERENCES Observations(id)
+);
+
+-- Tabel untuk menyimpan keterangan tambahan
+CREATE TABLE Remarks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    observation_id INT,
+    remarks TEXT,
+    FOREIGN KEY (observation_id) REFERENCES Observations(id)
+);
