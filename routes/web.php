@@ -29,5 +29,10 @@ Route::middleware([
 
     Route::get('/locations', [LocationController::class, 'index'])->name('locations');
     Route::get('/locations/data', [LocationController::class, 'getLocations'])->name('locations.data');
+    Route::post('/locations/store', [LocationController::class, 'store'])->name('locations.store');
+    Route::get('/locations/edit/{id}', [LocationController::class, 'edit'])->name('locations.edit');
+    Route::put('/locations/update/{id}', [LocationController::class, 'update'])->name('locations.update');
+    Route::delete('/locations/destroy/{id}', [LocationController::class, 'destroy'])->name('locations.destroy');
+
 
 });
