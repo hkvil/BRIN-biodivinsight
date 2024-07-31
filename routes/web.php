@@ -19,6 +19,7 @@ Route::middleware([
     })->name('dashboard');
     Route::get('/observations', [ObservationController::class, 'index'])->name('observations');
     Route::get('/observations/data', [ObservationController::class, 'getObservations'])->name('observations.data');
+    Route::get('/observation/{id}', [ObservationController::class, 'detail'])->name('observation.detail');
 
     Route::get('/plants', [PlantController::class, 'index'])->name('plants');
     Route::get('/plants/data', [PlantController::class, 'getPlants'])->name('plants.data');

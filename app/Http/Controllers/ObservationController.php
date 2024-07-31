@@ -14,6 +14,12 @@ class ObservationController extends Controller
         return view('observations');
     }
 
+    public function detail($id)
+    {
+        $observation = Observation::find($id);
+        return view('observation-detail', ['observation' => $observation]);
+    }
+
     public function getObservations(Request $request)
     {
         if ($request->ajax()) {

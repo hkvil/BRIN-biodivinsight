@@ -8,7 +8,6 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/js/app.js',
                 'resources/css/datatables.css',
-                'resources/js/dataTables.altEditor.free.js',
             ],
             refresh: true,
         }),

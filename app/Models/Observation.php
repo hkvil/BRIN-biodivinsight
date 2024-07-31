@@ -16,19 +16,30 @@ class Observation extends Model
         'observation_time'
     ];
 
-    /**
-     * Get the plant associated with the observation.
-     */
     public function plant()
     {
         return $this->belongsTo(Plant::class);
     }
 
-    /**
-     * Get the location associated with the observation.
-     */
     public function location() 
     {
         return $this->belongsTo(Location::class);
+    }
+
+    public function leafPhysiology()
+    {
+        return $this->hasMany(LeafPhysiology::class);
+    }
+
+    public function microclimate(){
+        return $this->hasOne(Microclimate::class);
+    }
+
+    public function soil(){
+        return $this->hasOne(Soil::class);
+    }
+
+    public function herbarium(){
+        return $this->hasOne(Herbarium::class);
     }
 }
