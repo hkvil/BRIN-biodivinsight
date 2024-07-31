@@ -57,13 +57,13 @@ class PlantController extends Controller
     }
 
     public function edit(string $id)
-{
-    $plant = Plant::find($id);
+    {
+        $plant = Plant::find($id);
 
-    if ($plant) {
-        return response()->json(['success' => true, 'data' => $plant]);
-    } else {
-        return response()->json(['success' => false, 'message' => 'Plant not found.'], 404);
+        if ($plant) {
+            return response()->json(['success' => true, 'data' => $plant]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Plant not found.'], 404);
+        }
     }
-}
 }
