@@ -17,7 +17,16 @@ class ObservationController extends Controller
     public function detail($id)
     {
         $observation = Observation::find($id);
-        return view('observation-detail', ['observation' => $observation]);
+        $soil = $observation->soil;
+        $microclimate = $observation->microclimate;
+        $leafPhysiology = $observation->leafPhysiology;
+        
+        return view('observation-detail', [
+        'observation' => $observation,
+        'soil' => $soil, 
+        'microclimate' => $microclimate,
+        'leafPhy' => $leafPhysiology
+    ]);
     }
 
     public function getObservations(Request $request)

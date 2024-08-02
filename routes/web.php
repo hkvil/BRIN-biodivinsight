@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ObservationController;
 use App\Http\Controllers\PlantController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\LeafPhysiologyController;
+use App\Http\Controllers\SoilController;
+use App\Http\Controllers\MicroclimateController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -35,5 +38,12 @@ Route::middleware([
     Route::put('/locations/update/{id}', [LocationController::class, 'update'])->name('locations.update');
     Route::delete('/locations/destroy/{id}', [LocationController::class, 'destroy'])->name('locations.destroy');
 
+    Route::get('/leafPhy/data', [LeafPhysiologyController::class, 'getLeafPhy'])->name('leafPhy.data');
+    Route::delete('/leafPhy/{id}', [LeafPhysiologyController::class, 'destroy'])->name('leafPhy.destroy');
+    Route::get('/leafPhy/edit/{id}', [LeafPhysiologyController::class, 'edit'])->name('leafPhy.edit');
+    Route::put('/leafPhy/update/{id}', [LeafPhysiologyController::class, 'update'])->name('leafPhy.update');
+    Route::post('/leafPhy/store', [LeafPhysiologyController::class, 'store'])->name('leafPhy.store');
 
+    Route::resource('soil', SoilController::class);
+    Route::resource('microclimate', MicroclimateController::class);
 });

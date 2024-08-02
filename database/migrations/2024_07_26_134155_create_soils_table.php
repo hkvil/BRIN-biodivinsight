@@ -13,7 +13,7 @@ return new class extends Migration
                 $table->foreignId('observation_id')->constrained('observations');
                 $table->double('pH');
                 $table->double('moisture');
-                $table->string('soil_sample')->nullable();
+                $table->string('temperature');
                 $table->timestamps();
             });
         }

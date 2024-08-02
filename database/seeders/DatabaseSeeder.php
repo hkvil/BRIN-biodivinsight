@@ -24,37 +24,39 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'admin',
+            'email' => 'admin@gmail.com',
+            'password' => bcrypt('admin123'),
         ]);
+        
 
-        $plant = Plant::factory()->create([
+        Plant::create([
             'id' => 1,
             'species_name' => 'Vigna unguiculata ',
             'common_name' => 'Kacang tunggak',
         ]);
 
-        $location = Location::factory()->create([
+        Location::create([
             'id' => 1,
             'dusun' => 'Barong',
             'desa' => 'Barong',
             'kelurahan' => 'Galeh',
             'kecamatan' => 'Tangen',
             'kabupaten' => 'Sragen',
-            'altitude' => '159,00m',
-            'longitude' => '111.0922518',
-            'latitude' => '-7.2647105',
+            'altitude' => 2500,
+            'longitude' => 111.0922518,
+            'latitude' => -7.2647105,
         ]);
 
-        $observation = Observation::factory()->create([
+        Observation::create([
             'id' => 1,
             'plant_id' => 1,
             'location_id' => 1,
             'observation_date' => '2024-07-23',
             'observation_time' => '12:30:00',
         ]);
-       
-        // LeafPhysiology::factory()->create([
+           
+        // LeafPhysiology::create([
         //     'observation_id' => 1,
         //     'chlorophyll' => 28.3,
         //     'nitrogen' => 11.6,
@@ -62,7 +64,7 @@ class DatabaseSeeder extends Seeder
         //     'leaf_temperature' => 38.62,
         // ]);
         for ($i = 2; $i <= 11; $i++) {
-            LeafPhysiology::factory()->create([
+            LeafPhysiology::create([
             'observation_id' => 1,
             'chlorophyll' => rand(200, 300) / 10,
             'nitrogen' => rand(100, 150) / 10,
@@ -71,19 +73,19 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        Microclimate::factory()->create([
+        Microclimate::create([
             'observation_id' => 1,
             'temperature' => 33.6,
             'humidity' => 67,
             'pressure' => 14.67,
         ]);
 
-        Soil::factory()->create([
-            'observation_id' => $observation->id,
-            'soil_moisture' => 50,
-            'soil_temperature' => 20,
+        Soil::create([
+            'observation_id' => 1,
+            'ph' => 6.5,
+            'moisture' => 36.5,
+            'temperature' => 27.5,
         ]);
-
 
     }
 }
