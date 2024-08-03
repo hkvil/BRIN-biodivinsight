@@ -79,7 +79,7 @@
             <h3 class="text-lg font-bold" id="modal-title">Add New Data</h3>
             <form id="general-form" method="POST" action="">
                 @csrf
-                <input type="hidden" id="plant-id" name="id">
+                <input type="hidden" name="observation_id" value="{{ $observation->id }}">
                 <div class="py-4" id="form-fields">
                     <!-- Dynamic form fields will be inserted here -->
                 </div>
@@ -137,7 +137,7 @@
                         {
                             text: 'Add New Data',
                             action: function (e, dt, node, config) {
-                                openModal('add');
+                                openModal('LeafPhy',null,'add');
                             }
                         }
                     ]
@@ -145,7 +145,7 @@
             }
         });
         // Handle form submission
-        $('#leaf-form').on('submit', function(e) {
+        $('#general-form').on('submit', function(e) {
             e.preventDefault();
             $.ajax({
             url: $(this).attr('action'),
@@ -153,7 +153,6 @@
             data: $(this).serialize(),
             success: function(response) {
                 if (response.success) {
-                showSuccessAlert(response.species_name + " Added");
                 table.ajax.reload(); // Reload the DataTable
                 document.getElementById('my_modal_5').close(); // Close the modal
                 }
@@ -173,7 +172,7 @@
             method: 'GET',
             success: function(response) {
                 if (response.success) {
-                openModal('LeafPhy', response.data);
+                openModal('LeafPhy', response.data,'edit');
                 }
             },
             error: function(xhr) {
@@ -207,7 +206,7 @@
             }
         });
 
-    function openModal(type, data = null,action) {
+    function openModal(type, data = null,action = null) {
         const modalTitle = document.getElementById('modal-title');
         const form = document.getElementById('general-form');
         const formFields = document.getElementById('form-fields');
@@ -239,10 +238,22 @@
                     </div>
                 `;
                 // Assign data to input text
-                document.getElementById('chlorophyll').value = data.chlorophyll;
-                document.getElementById('nitrogen').value = data.nitrogen;
-                document.getElementById('leaf_moisture').value = data.leaf_moisture;
-                document.getElementById('leaf_temperature').value = data.leaf_temperature;
+                if (action == 'edit') {
+                    form.innerHTML += '<input type="hidden" name="_method" value="PUT">'; // Spoof PUT method
+                    modalTitle.textContent = "Edit Leaf Physiology";
+                    document.getElementById('chlorophyll').value = data.chlorophyll;
+                    document.getElementById('nitrogen').value = data.nitrogen;
+                    document.getElementById('leaf_moisture').value = data.leaf_moisture;
+                    document.getElementById('leaf_temperature').value = data.leaf_temperature;
+                    form.action = '{{ route('leafPhy.update', ':id') }}'.replace(':id', data.id);
+                    
+                }
+
+                if (action == 'add') {
+                    modalTitle.textContent = "Add New Leaf Physiology";
+                    form.action = '{{ route('leafPhy.store'), ':id' }}'.replace(':id', 1);
+                }
+                
                 break;
                 
             case 'Soil':

@@ -32,15 +32,90 @@ class ObservationController extends Controller
     public function getObservations(Request $request)
     {
         if ($request->ajax()) {
-            $observations = Observation::with('plant', 'location')->get();
+            $observations = Observation::with('plant', 'location','remarks')->get();
             return datatables()->of($observations)
                 ->addColumn('plant_name', function($row){
                     return $row->plant->species_name;
                 })
                 ->addColumn('location_name', function($row){
                     return $row->location->desa;
-                })
-                ->make(true);
+                })->addColumn('remarks', function($row){
+                    return $row->remarks->remarks;
+                })->make(true);
+                
         }
     }
+
+    public function update(Request $request, string $id)
+    {
+        $observation = Observation::find($id);
+        $observation->plant_id = $request->input('plant_id');
+        $observation->location_id = $request->input('location_id');
+        $observation->observation_date = $request->input('observation_date');
+        $observation->observation_time = $request->input('observation_time');
+        $observation->save();
+        return response()->json(['success'=>'Observation updated successfully.']);
+    }
+
+    public function destroy(string $id)
+    {
+        $observation = Observation::find($id);
+        $observation->delete();
+        return response()->json(['success'=>'Observation deleted successfully.']);
+    }
+
+    public function edit(string $id)
+    {
+        $observation = Observation::find($id);
+        $plants = Plant::all();
+        $locations = Location::all();
+
+        if ($observation) {
+            return response()->json(['success' => true, 'data' => $observation, 'plants' => $plants, 'locations' => $locations]);
+        } else {
+            return response()->json(['success' => false]);
+        }
+    }
+
+    public function store (Request $request)
+    {
+        $request->validate([
+            'plant_id' => 'required',
+            'location_id' => 'required',
+            'observation_date' => 'required',
+            'observation_time' => 'required',
+        ]);
+
+        Observation::create([
+            'plant_id' => $request->plant_id,
+            'location_id' => $request->location_id,
+            'observation_date' => $request->observation_date,
+            'observation_time' => $request->observation_time,
+        ]);
+
+        return response()->json(['success' => 'Observation created successfully.']);
+    }
+
+        // Method for Select2 library
+        public function getPlantsS2()
+        {
+            $plants = Plant::all(['id', 'species_name','common_name']);
+            return response()->json($plants);
+        }
+    
+        public function getLocationsS2()
+        {
+            $locations = Location::all([
+                'id',
+                'dusun',
+                'desa',
+                'kelurahan',
+                'kecamatan',
+                'kabupaten',
+                'altitude',
+                'longitude',
+                'latitude'
+            ]);
+            return response()->json($locations);
+        }
 }

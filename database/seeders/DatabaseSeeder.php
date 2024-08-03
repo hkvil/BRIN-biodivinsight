@@ -12,6 +12,7 @@ use App\Models\Location;
 use App\Models\Microclimate;
 use App\Models\Soil;
 use App\Models\Herbarium;
+use App\Models\Remark;
 
 
 class DatabaseSeeder extends Seeder
@@ -54,6 +55,11 @@ class DatabaseSeeder extends Seeder
             'location_id' => 1,
             'observation_date' => '2024-07-23',
             'observation_time' => '12:30:00',
+        ]);
+
+        Remark::create([
+            'observation_id' => 1,
+            'remarks' => 'Hari ini cuaca cerah',
         ]);
            
         // LeafPhysiology::create([

@@ -49,4 +49,8 @@ class Observation extends Model
     public function herbarium(){
         return $this->hasOne(Herbarium::class);
     }
+
+    public function remarks(){
+        return $this->hasOne(Remark::class);
+    }
 }

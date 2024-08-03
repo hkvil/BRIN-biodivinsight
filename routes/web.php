@@ -23,6 +23,10 @@ Route::middleware([
     Route::get('/observations', [ObservationController::class, 'index'])->name('observations');
     Route::get('/observations/data', [ObservationController::class, 'getObservations'])->name('observations.data');
     Route::get('/observation/{id}', [ObservationController::class, 'detail'])->name('observation.detail');
+    Route::put('/observations/update/{id}', [ObservationController::class, 'update'])->name('observations.update');
+    Route::delete('/observations/destroy/{id}', [ObservationController::class, 'destroy'])->name('observations.destroy');
+    Route::post('/observations/store', [ObservationController::class, 'store'])->name('observations.store');
+
 
     Route::get('/plants', [PlantController::class, 'index'])->name('plants');
     Route::get('/plants/data', [PlantController::class, 'getPlants'])->name('plants.data');
@@ -46,4 +50,8 @@ Route::middleware([
 
     Route::resource('soil', SoilController::class);
     Route::resource('microclimate', MicroclimateController::class);
+
+    //Select2 Library route
+    Route::get('/api/plants', [ObservationController::class, 'getPlantsS2'])->name('api.plants');
+    Route::get('/api/locations', [ObservationController::class, 'getLocationsS2'])->name('api.locations');
 });

@@ -16,6 +16,7 @@
                             <th>Location Name</th>
                             <th>Date</th>
                             <th>Time</th>
+                            <th>Remarks</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -27,6 +28,22 @@
         </div>
     </div>
 
+            <!-- Add New Data Modal -->
+    <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box">
+            <h3 class="text-lg font-bold" id="modal-title">Add New Data</h3>
+            <form id="general-form" method="POST" action="">
+                @csrf
+                <div class="py-4" id="form-fields">
+                    <!-- Dynamic form fields will be inserted here -->
+                </div>
+                <div class="modal-action">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn" onclick="document.getElementById('my_modal_5').close()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
     
 
     @push('scripts')
@@ -48,6 +65,7 @@
                     { data: 'location_name', name: 'location_name' },
                     { data: 'observation_date', name: 'observation_date' },
                     { data: 'observation_time', name: 'observation_time' },
+                    { data: 'remarks', name: 'remarks' },
                     {
                     data: null,
                     name: 'action',
@@ -67,7 +85,18 @@
                         `;
                     }
                 }
-                ]
+                ],layout: {
+                topStart: {
+                    buttons: [
+                        {
+                            text: 'Add New Data',
+                            action: function (e, dt, node, config) {
+                                openModal('add');
+                            }
+                        }
+                    ]
+                }
+            }
             });
 
             // Handle Detail button click
@@ -76,9 +105,94 @@
                 console.log('Detail button clicked for ID:', id);
                 window.location.href = '/observation/' + id;
             });
+
+        function openModal(action, data = null) {
+        const modalTitle = document.getElementById('modal-title');
+        const form = document.getElementById('general-form');
+        const formFields = document.getElementById('form-fields');
+
+        formFields.innerHTML = `
+        <div class="mb-4">
+            <label for="plant_name" class="block text-sm font-medium text-gray-700">Plant Name</label>
+            <select name="plant_name" id="plant_name" class="mt-1 block w-full" required>
+                <!-- Options will be populated dynamically -->
+            </select>
+        </div>
+        <div class="mb-4">
+            <label for="location_name" class="block text-sm font-medium text-gray-700">Location Name</label>
+            <select name="location_name" id="location_name" class="mt-1 block w-full" required>
+                <!-- Options will be populated dynamically -->
+            </select>
+        </div>
+        <div class="mb-4">
+            <label for="observation_date" class="block text-sm font-medium text-gray-700">Observation Date</label>
+            <input type="date" name="observation_date" id="observation_date" class="mt-1 block w-full" autocomplete="off" required>
+        </div>
+        <div class="mb-4">
+            <label for="observation_time" class="block text-sm font-medium text-gray-700">Observation Time</label>
+            <input type="time" name="observation_time" id="observation_time" class="mt-1 block w-full" autocomplete="off" required>
+        </div>
+        <div class="mb-4">
+            <label for="remarks" class="block text-sm font-medium text-gray-700">Remarks</label>
+            <textarea name="remarks" id="remarks" class="mt-1 block w-full" autocomplete="off" required></textarea>
+        </div>
+    `;
+
+        if (action === 'add') {
+            modalTitle.textContent = 'Add New Data';
+            form.action = '{{ route('observations.store') }}';
+        } else if (action === 'edit') {
+            modalTitle.textContent = 'Edit Data';
+            form.action = '{{ route('observations.update', ':id') }}'.replace(':id', data.id);
+
+            // Populate the form fields with the data
+            document.getElementById('plant_name').value = data.plant_name;
+            document.getElementById('location_name').value = data.location_name;
+            document.getElementById('observation_date').value = data.observation_date;
+            document.getElementById('observation_time').value = data.observation_time;
+            document.getElementById('remarks').value = data.remarks;
+        }
+
+        populateSelectOptions('plant_name', '/api/plants');
+        populateSelectOptions('location_name','/api/locations');
+
+        // Show the modal
+        document.getElementById('my_modal_5').showModal();
+        }
         });
 
 
+        function populateSelectOptions(selectId, apiUrl) {
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Data fetched:', data);
+                    const select = document.getElementById(selectId);
+                    data.forEach(item => {
+                        console.log('tes')
+                        const option = document.createElement('option');
+                        option.value = item.id;
+                        if(selectId === 'plant_name') {
+                            option.value = item.id;
+                            option.text = item.species_name + ' (' + item.common_name + ')';
+                        } else {
+                            option.text = `${item.dusun}, ${item.desa}, ${item.kelurahan}, ${item.kecamatan}, ${item.kabupaten}, Altitude: ${item.altitude}, Longitude: ${item.longitude}, Latitude: ${item.latitude}`;
+                        }
+                        select.appendChild(option);
+                    });
+                    // Re-initialize Select2 after options are populated
+                    $('#' + selectId).select2();
+                    console.log('Select2 initialized for:', selectId);
+                })
+                .catch(error => console.error('Error fetching data:', error));
+
+                
+            }
+
+            // In your Javascript (external .js resource or <script> tag)
+                $(document).ready(function() {
+                    $('#plant_name').select2();
+                });
 
     </script>
     @endpush

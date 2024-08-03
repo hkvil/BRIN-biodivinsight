@@ -33,8 +33,10 @@ class LeafPhysiologyController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, string $observationId)
+    public function store(Request $request)
     {
+        $observationId = $request->input('observation_id');
+
         $request->validate([
             'chlorophyll' => 'required',
             'nitrogen' => 'required',
