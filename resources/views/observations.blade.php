@@ -97,6 +97,7 @@
                     ]
                 }
             }
+            
             });
 
             // Handle Detail button click
@@ -159,41 +160,34 @@
         // Show the modal
         document.getElementById('my_modal_5').showModal();
         }
-        });
-
 
         function populateSelectOptions(selectId, apiUrl) {
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Data fetched:', data);
-                    const select = document.getElementById(selectId);
-                    data.forEach(item => {
-                        console.log('tes')
-                        const option = document.createElement('option');
-                        option.value = item.id;
-                        if(selectId === 'plant_name') {
+                fetch(apiUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Data fetched:', data);
+                        const select = document.getElementById(selectId);
+                        data.forEach(item => {
+                            console.log('tes')
+                            const option = document.createElement('option');
                             option.value = item.id;
-                            option.text = item.species_name + ' (' + item.common_name + ')';
-                        } else {
-                            option.text = `${item.dusun}, ${item.desa}, ${item.kelurahan}, ${item.kecamatan}, ${item.kabupaten}, Altitude: ${item.altitude}, Longitude: ${item.longitude}, Latitude: ${item.latitude}`;
-                        }
-                        select.appendChild(option);
-                    });
-                    // Re-initialize Select2 after options are populated
-                    $('#' + selectId).select2();
-                    console.log('Select2 initialized for:', selectId);
-                })
-                .catch(error => console.error('Error fetching data:', error));
+                            if(selectId === 'plant_name') {
+                                option.value = item.id;
+                                option.text = item.species_name + ' (' + item.common_name + ')';
+                            } else {
+                                option.text = `${item.dusun}, ${item.desa}, ${item.kelurahan}, ${item.kecamatan}, ${item.kabupaten}, Altitude: ${item.altitude}, Longitude: ${item.longitude}, Latitude: ${item.latitude}`;
+                            }
+                            select.appendChild(option);
+                        });
+                        // Re-initialize Select2 after options are populated
+                        $('#' + selectId).select2();
+                        console.log('Select2 initialized for:', selectId);
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
 
                 
-            }
-
-            // In your Javascript (external .js resource or <script> tag)
-                $(document).ready(function() {
-                    $('#plant_name').select2();
-                });
-
+            }});
+            
     </script>
     @endpush
 </x-app-layout>
