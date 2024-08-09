@@ -53,6 +53,7 @@ class DatabaseSeeder extends Seeder
             'id' => 1,
             'plant_id' => 1,
             'location_id' => 1,
+            'remark_id' => 1,
             'observation_date' => '2024-07-23',
             'observation_time' => '12:30:00',
         ]);

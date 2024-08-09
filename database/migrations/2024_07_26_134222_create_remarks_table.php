@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('remarks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('observation_id')->constrained('observations');
+            $table->unsignedBigInteger('observation_id')->nullable();
             $table->text('remarks')->nullable();
             $table->timestamps();
         });

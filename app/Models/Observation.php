@@ -19,8 +19,9 @@ class Observation extends Model
     protected $fillable = [
         'plant_id',
         'location_id',
+        'remark_id',
         'observation_date',
-        'observation_time'
+        'observation_time',
     ];
 
     public function plant()

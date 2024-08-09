@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Observation; 
 use App\Models\Plant;
 use App\Models\Location;
+use App\Models\Remark;
+use App\Models\LeafPhysiology;
 
 class ObservationController extends Controller
 {
@@ -53,6 +55,10 @@ class ObservationController extends Controller
         $observation->location_id = $request->input('location_id');
         $observation->observation_date = $request->input('observation_date');
         $observation->observation_time = $request->input('observation_time');
+        if ($observation->remarks) {
+            $observation->remarks->remarks = $request->input('remarks');
+            $observation->remarks->save();
+        }
         $observation->save();
         return response()->json(['success'=>'Observation updated successfully.']);
     }
@@ -60,8 +66,12 @@ class ObservationController extends Controller
     public function destroy(string $id)
     {
         $observation = Observation::find($id);
+        #Perlu pemikiran lebih lanjut
+        $observation->leafPhysiology()->delete();
+        $observation->microclimate()->delete();
+        $observation->soil()->delete();
         $observation->delete();
-        return response()->json(['success'=>'Observation deleted successfully.']);
+        return response()->json(['success'=>'Observation deleted successfully.','leafphysiology'=>$observation->leafPhysiology()->exists()]);
     }
 
     public function edit(string $id)
@@ -69,9 +79,10 @@ class ObservationController extends Controller
         $observation = Observation::find($id);
         $plants = Plant::all();
         $locations = Location::all();
+        $remarks = $observation->remarks;
 
         if ($observation) {
-            return response()->json(['success' => true, 'data' => $observation, 'plants' => $plants, 'locations' => $locations]);
+            return response()->json(['success' => true, 'data' => $observation, 'plants' => $plants, 'locations' => $locations, 'remarks' => $remarks]);
         } else {
             return response()->json(['success' => false]);
         }
@@ -84,14 +95,23 @@ class ObservationController extends Controller
             'location_id' => 'required',
             'observation_date' => 'required',
             'observation_time' => 'required',
+            'remarks' => 'nullable|string'
         ]);
 
-        Observation::create([
+        $observation = Observation::create([
             'plant_id' => $request->plant_id,
             'location_id' => $request->location_id,
             'observation_date' => $request->observation_date,
             'observation_time' => $request->observation_time,
         ]);
+
+        if ($request->has('remarks') && !empty($request->remarks)) {
+            $remark = Remark::create([
+                'observation_id' => $observation->id,
+                'remarks' => $request->remarks,
+            ]);
+            $observation->update(['remark_id' => $remark->id]);
+        }
 
         return response()->json(['success' => 'Observation created successfully.']);
     }

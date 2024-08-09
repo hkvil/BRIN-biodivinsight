@@ -107,6 +107,67 @@
                 window.location.href = '/observation/' + id;
             });
 
+            // Handle Edit button click
+            $('#observations-table').on('click', '.edit-btn', function() {
+                const id = $(this).data('id');
+                console.log('Edit button clicked for ID:', id);
+                $.ajax({
+                    url: '{{ route('observation.edit', '') }}/' + id,
+                    method: 'GET',
+                    success: function(response) {
+                        if (response.success) {
+                            openModal('edit', response.data);
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error(xhr.responseText); // log the error for debugging
+                    }
+                });
+            });
+
+            $('#general-form').on('submit', function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: $(this).attr('action'),
+                method: $(this).attr('method'),
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        // showSuccessAlert("Added");
+                        table.ajax.reload(); // Reload the DataTable
+                        document.getElementById('my_modal_5').close(); // Close the modal
+                    }
+                },
+                error: function(xhr) {
+                    console.error(xhr.responseText); // log the error for debugging
+                }
+            });
+        });
+        // Handle Delete button click
+        $('#observations-table').on('click', '.delete-btn', function() {
+            const id = $(this).data('id');
+            const url = '{{ route('observations.destroy', '') }}/' + id;
+            const token = '{{ csrf_token() }}';
+
+            if (confirm('Are you sure you want to delete this observation?')) {
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    data: {
+                        _token: token
+                    },
+                    success: function(response) {
+                        console.log('Delete successful for ID:', id);
+                        table.ajax.reload();
+                    },
+                    error: function(xhr) {
+                        console.error('Delete failed for ID:', id);
+                        alert('Failed to delete. Please try again.');
+                    }
+                });
+            }
+        });
+
         function openModal(action, data = null) {
         const modalTitle = document.getElementById('modal-title');
         const form = document.getElementById('general-form');
@@ -114,14 +175,14 @@
 
         formFields.innerHTML = `
         <div class="mb-4">
-            <label for="plant_name" class="block text-sm font-medium text-gray-700">Plant Name</label>
-            <select name="plant_name" id="plant_name" class="mt-1 block w-full" required>
+            <label for="plant_id" class="block text-sm font-medium text-gray-700">Plant Name</label>
+            <select name="plant_id" id="plant_id" class="mt-1 block w-full" required>
                 <!-- Options will be populated dynamically -->
             </select>
         </div>
         <div class="mb-4">
-            <label for="location_name" class="block text-sm font-medium text-gray-700">Location Name</label>
-            <select name="location_name" id="location_name" class="mt-1 block w-full" required>
+            <label for="location_id" class="block text-sm font-medium text-gray-700">Location Name</label>
+            <select name="location_id" id="location_id" class="mt-1 block w-full" required>
                 <!-- Options will be populated dynamically -->
             </select>
         </div>
@@ -144,18 +205,25 @@
             form.action = '{{ route('observations.store') }}';
         } else if (action === 'edit') {
             modalTitle.textContent = 'Edit Data';
-            form.action = '{{ route('observations.update', ':id') }}'.replace(':id', data.id);
+            form.action = '{{ route('observations.update', '') }}/' + data.id;
 
             // Populate the form fields with the data
-            document.getElementById('plant_name').value = data.plant_name;
-            document.getElementById('location_name').value = data.location_name;
+            document.getElementById('plant_id').value = data.plant_id;
+            document.getElementById('location_id').value = data.location_id;
             document.getElementById('observation_date').value = data.observation_date;
             document.getElementById('observation_time').value = data.observation_time;
-            document.getElementById('remarks').value = data.remarks;
+            document.getElementById('remarks').value = data.remarks.remarks;
+
+            // Add the hidden input field for PUT method
+            var methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = '_method';
+            methodInput.value = 'PUT';
+            form.appendChild(methodInput);
         }
 
-        populateSelectOptions('plant_name', '/api/plants');
-        populateSelectOptions('location_name','/api/locations');
+        populateSelectOptions('plant_id', '/api/plants');
+        populateSelectOptions('location_id','/api/locations');
 
         // Show the modal
         document.getElementById('my_modal_5').showModal();
@@ -171,7 +239,7 @@
                             console.log('tes')
                             const option = document.createElement('option');
                             option.value = item.id;
-                            if(selectId === 'plant_name') {
+                            if(selectId === 'plant_id') {
                                 option.value = item.id;
                                 option.text = item.species_name + ' (' + item.common_name + ')';
                             } else {
@@ -179,15 +247,15 @@
                             }
                             select.appendChild(option);
                         });
-                        // Re-initialize Select2 after options are populated
-                        $('#' + selectId).select2();
+                        
+                        $('#' + selectId).chosen();
                         console.log('Select2 initialized for:', selectId);
                     })
                     .catch(error => console.error('Error fetching data:', error));
 
                 
             }});
-            
+
     </script>
     @endpush
 </x-app-layout>

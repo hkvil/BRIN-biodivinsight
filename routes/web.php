@@ -26,7 +26,7 @@ Route::middleware([
     Route::put('/observations/update/{id}', [ObservationController::class, 'update'])->name('observations.update');
     Route::delete('/observations/destroy/{id}', [ObservationController::class, 'destroy'])->name('observations.destroy');
     Route::post('/observations/store', [ObservationController::class, 'store'])->name('observations.store');
-
+    Route::get('/observation/edit/{id}', [ObservationController::class, 'edit'])->name('observation.edit');
 
     Route::get('/plants', [PlantController::class, 'index'])->name('plants');
     Route::get('/plants/data', [PlantController::class, 'getPlants'])->name('plants.data');

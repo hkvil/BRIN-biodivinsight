@@ -202,6 +202,13 @@
                 plantId.value = data.id;
                 speciesName.value = data.species_name;
                 commonName.value = data.common_name;
+
+                // Add the hidden input field for PUT method
+                var methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = '_method';
+                methodInput.value = 'PUT';
+                form.appendChild(methodInput);
             }
 
             modal.showModal();

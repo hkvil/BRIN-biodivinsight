@@ -25,7 +25,10 @@ class LeafPhysiologyController extends Controller
     public function getLeafPhy(Request $request)
     {
         if ($request->ajax()) {
-            $leafs = LeafPhysiology::select('id','chlorophyll', 'nitrogen', 'leaf_moisture', 'leaf_temperature')->get();
+            $observationId = $request->input('observation_id');
+            $leafs = LeafPhysiology::select('id', 'chlorophyll', 'nitrogen', 'leaf_moisture', 'leaf_temperature')
+                        ->where('observation_id', $observationId)
+                        ->get();
             return datatables()->of($leafs)->make(true);
         }
     }

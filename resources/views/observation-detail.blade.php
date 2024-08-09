@@ -105,6 +105,9 @@
             ajax: {
                 url: '{{ route('leafPhy.data') }}',
                 type: 'GET',
+                data: {
+                    observation_id: '{{ $observation->id }}'
+                },
                 error: function (xhr, error, thrown) {
                     console.error(xhr.responseText); // log the error for debugging
                 }
