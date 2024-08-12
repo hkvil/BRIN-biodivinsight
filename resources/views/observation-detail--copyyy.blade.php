@@ -26,14 +26,13 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <div class="bg-gray-200 p-4" id="soil-data">
+                <div class="bg-gray-200 p-4">
                     <h4 class="text-lg font-semibold mb-2">Soil Data</h4>
                     <p class="mb-2">pH: {{$soil->pH ?? 'No Data'}}</p>
                     <p class="mb-2">moisture: {{$soil->moisture ?? 'No Data'}}</p>
                     <p class="mb-2">temperature: {{$soil->temperature ?? 'No Data'}}</p>
-                    <div id="action-buttons"></div>
                 </div>
-                
+
                 <div class="bg-gray-200 p-4">
                     <h4 class="text-lg font-semibold mb-2">Microclimate Data</h4>
                     <p class="mb-2">Temperature: {{$microclimate->temperature ?? 'No Data'}}</p>
@@ -93,7 +92,7 @@
     </dialog>
 
 @push('scripts')
-{{-- <script>
+<script>
     $(document).ready(function() {
         // Log the leafPhy data to the console
         const leafPhy = @json($leafPhy);
@@ -307,137 +306,6 @@
     });
 
 
-
-</script> --}}
-
-{{-- SCRIPT FOR SOIL SECTION --}}
-<script>
-    $(document).ready(function() {
-    // Fetch Soil data when the page loads
-    $.ajax({
-        url: '{{ route("soil.data") }}',
-        type: 'GET',
-        data: {
-            observation_id: '{{ $observation->id }}'
-        },
-        success: function(response) {
-            const soilData = response.data[0];
-
-            if (soilData) {
-                const { pH, moisture, temperature } = soilData;
-
-                // Check if any of the fields have "No Data"
-                if (pH === "No Data" || moisture === "No Data" || temperature === "No Data") {
-                    // Display "Add Data" button
-                    $('#action-buttons').html(`
-                        <button id="add-data-btn" class="btn btn-sm btn-success">
-                            <i class="fas fa-plus"></i> Add Data
-                        </button>
-                    `);
-
-                    // Handle "Add Data" button click
-                    $('#add-data-btn').on('click', function() {
-                        openModal('Soil', null, 'add');
-                    });
-
-                } else {
-                    // Display "Edit" and "Delete" buttons
-                    $('#action-buttons').html(`
-                        <button id="edit-data-btn" class="btn btn-sm btn-primary">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                        <button id="delete-data-btn" class="btn btn-sm btn-danger">
-                            <i class="fas fa-trash-alt"></i> Delete
-                        </button>
-                    `);
-
-                    // Handle "Edit" button click
-                    $('#edit-data-btn').on('click', function() {
-                        openModal('Soil', soilData, 'edit');
-                    });
-
-                    // Handle "Delete" button click
-                    $('#delete-data-btn').on('click', function() {
-                        if (confirm('Are you sure you want to delete this?')) {
-                            $.ajax({
-                                url: '{{ route("soil.destroy", ":id") }}'.replace(':id', soilData.id),
-                                type: 'DELETE',
-                                data: {
-                                    _token: '{{ csrf_token() }}'
-                                },
-                                success: function(response) {
-                                    alert('Soil data deleted successfully.');
-                                    location.reload(); // Reload the page
-                                },
-                                error: function(xhr) {
-                                    console.error(xhr.responseText);
-                                    alert('Failed to delete the Soil data. Please try again.');
-                                }
-                            });
-                        }
-                    });
-                }
-            } else {
-                // If no data exists, display "Add Data" button
-                $('#action-buttons').html(`
-                    <button id="add-data-btn" class="btn btn-sm btn-success">
-                        <i class="fas fa-plus"></i> Add Data
-                    </button>
-                `);
-
-                // Handle "Add Data" button click
-                $('#add-data-btn').on('click', function() {
-                    openModal('Soil', null, 'add');
-                });
-            }
-        },
-        error: function(xhr, error, thrown) {
-            console.error(xhr.responseText);
-        }
-    });
-
-    function openModal(type, data = null, action = null) {
-        const modalTitle = document.getElementById('modal-title');
-        const form = document.getElementById('general-form');
-        const formFields = document.getElementById('form-fields');
-
-        // Clear existing form fields
-        formFields.innerHTML = '';
-
-        // Update modal title and form action based on type
-        switch (type) {
-            case 'Soil':
-                modalTitle.textContent = action === 'edit' ? 'Edit Soil Data' : 'Add New Soil Data';
-                form.action = action === 'edit'
-                    ? '{{ route("soil.update", ":id") }}'.replace(':id', data.id)
-                    : '{{ route("soil.store") }}';
-                formFields.innerHTML = `
-                    <div class="mb-4">
-                        <label for="ph" class="block text-sm font-medium text-gray-700">pH</label>
-                        <input type="text" name="pH" id="ph" class="mt-1 block w-full" value="${data ? data.pH : ''}" autocomplete="off" required>
-                    </div>
-                    <div class="mb-4">
-                        <label for="moisture" class="block text-sm font-medium text-gray-700">Moisture</label>
-                        <input type="text" name="moisture" id="moisture" class="mt-1 block w-full" value="${data ? data.moisture : ''}" autocomplete="off" required>
-                    </div>
-                    <div class="mb-4">
-                        <label for="temperature" class="block text-sm font-medium text-gray-700">Temperature</label>
-                        <input type="text" name="temperature" id="temperature" class="mt-1 block w-full" value="${data ? data.temperature : ''}" autocomplete="off" required>
-                    </div>
-                `;
-
-                if (action === 'edit') {
-                // Add a hidden input to spoof the PUT method
-                form.innerHTML += '<input type="hidden" name="_method" value="PUT">';
-            }
-            break;
-        }
-
-        // Show the modal
-        document.getElementById('my_modal_5').showModal();
-    }
-});
-        
 
 </script>
 @endpush
