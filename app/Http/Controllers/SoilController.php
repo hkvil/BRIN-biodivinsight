@@ -15,7 +15,13 @@ class SoilController extends Controller
         //
     }
 
+    public function getSoilData(Request $request)
+    {
+        $observationId = $request->input('observation_id');
+        $soil = Soil::where('observation_id', $observationId)->first();
 
+        return response()->json(['data' => [$soil]]);
+    }
 
     public function store(Request $request, string $observationId)
     {
@@ -51,9 +57,11 @@ class SoilController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $soil = Soil::findOrFail($id);
+
+        return response()->json(['success' => true, 'data' => $soil]);
     }
 
     public function update(Request $request, string $id)
@@ -67,8 +75,7 @@ class SoilController extends Controller
         $soil = Soil::findOrFail($id);
         $soil->update($request->all());
 
-
-        return response()->json(['success' => 'Soil updated successfully.']);
+        return response()->json(['success' => 'Soil updated successfully.', 'data' => $soil]);
     }
 
     /**
