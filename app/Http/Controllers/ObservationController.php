@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Observation; 
+use App\Models\Soil;
 use App\Models\Plant;
 use App\Models\Location;
 use App\Models\Remark;

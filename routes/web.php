@@ -23,10 +23,6 @@ Route::middleware([
     Route::get('/observations', [ObservationController::class, 'index'])->name('observations');
     Route::get('/observations/data', [ObservationController::class, 'getObservations'])->name('observations.data');
     Route::get('/observation/{id}', [ObservationController::class, 'detail'])->name('observation.detail');
-    Route::put('/observations/update/{id}', [ObservationController::class, 'update'])->name('observations.update');
-    Route::delete('/observations/destroy/{id}', [ObservationController::class, 'destroy'])->name('observations.destroy');
-    Route::post('/observations/store', [ObservationController::class, 'store'])->name('observations.store');
-    Route::get('/observation/edit/{id}', [ObservationController::class, 'edit'])->name('observation.edit');
 
     Route::get('/plants', [PlantController::class, 'index'])->name('plants');
     Route::get('/plants/data', [PlantController::class, 'getPlants'])->name('plants.data');
@@ -48,6 +44,7 @@ Route::middleware([
     Route::put('/leafPhy/update/{id}', [LeafPhysiologyController::class, 'update'])->name('leafPhy.update');
     Route::post('/leafPhy/store', [LeafPhysiologyController::class, 'store'])->name('leafPhy.store');
 
+<<<<<<< HEAD
     // Route::resource('soil', SoilController::class);
     Route::get('/soil/data', [SoilController::class, 'getSoilData'])->name('soil.data');
     Route::post('/soil/store', [SoilController::class, 'store'])->name('soil.store');
@@ -57,8 +54,20 @@ Route::middleware([
 
 
     Route::resource('microclimate', MicroclimateController::class);
+=======
+    // Route::get('/soil/data', [SoilController::class, 'getSoil'])->name('soil.data');
+    // Route::delete('/soil/{id}', [SoilController::class, 'destroy'])->name('soil.destroy');
+    // Route::resource('soil', SoilController::class);
+    // Route::get('/soil/update/{observation_id}', [SoilController::class, 'edit'])->name('soil.edit');
+>>>>>>> f5f155d3ea42bddaa72d5f292cebb0e5d43faf1f
 
-    //Select2 Library route
-    Route::get('/api/plants', [ObservationController::class, 'getPlantsS2'])->name('api.plants');
-    Route::get('/api/locations', [ObservationController::class, 'getLocationsS2'])->name('api.locations');
+    // TEST SOIL
+    Route::get('/soil/data', [SoilController::class, 'getSoilData'])->name('soil.data');
+    Route::post('/soil/store', [SoilController::class, 'store'])->name('soil.store');
+    Route::get('/soil/edit/{id}', [SoilController::class, 'edit'])->name('soil.edit');
+    Route::put('/soil/update/{id}', [SoilController::class, 'update'])->name('soil.update');
+    Route::delete('/soil/destroy/{id}', [SoilController::class, 'destroy'])->name('soil.destroy');
+    Route::resource('soil', SoilController::class);
+
+    Route::resource('microclimate', MicroclimateController::class);
 });
