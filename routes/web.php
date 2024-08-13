@@ -48,7 +48,14 @@ Route::middleware([
     Route::put('/leafPhy/update/{id}', [LeafPhysiologyController::class, 'update'])->name('leafPhy.update');
     Route::post('/leafPhy/store', [LeafPhysiologyController::class, 'store'])->name('leafPhy.store');
 
-    Route::resource('soil', SoilController::class);
+    // Route::resource('soil', SoilController::class);
+    Route::get('/soil/data', [SoilController::class, 'getSoilData'])->name('soil.data');
+    Route::post('/soil/store', [SoilController::class, 'store'])->name('soil.store');
+    Route::get('/soil/edit/{id}', [SoilController::class, 'edit'])->name('soil.edit');
+    Route::put('/soil/update/{id}', [SoilController::class, 'update'])->name('soil.update');
+    Route::delete('/soil/destroy/{id}', [SoilController::class, 'destroy'])->name('soil.destroy');
+
+
     Route::resource('microclimate', MicroclimateController::class);
 
     //Select2 Library route
