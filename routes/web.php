@@ -55,3 +55,4 @@ Route::middleware([
     Route::get('/api/plants', [ObservationController::class, 'getPlantsS2'])->name('api.plants');
     Route::get('/api/locations', [ObservationController::class, 'getLocationsS2'])->name('api.locations');
 });
+    

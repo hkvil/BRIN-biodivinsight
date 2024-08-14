@@ -53,7 +53,12 @@ class SoilController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $soil = Soil::findOrFail($id);
+        if ($soil) {
+            return response()->json(['success' => true, 'data' => $soil]);
+        } else {
+            return response()->json(['success' => false]);
+        }
     }
 
     public function update(Request $request, string $id)

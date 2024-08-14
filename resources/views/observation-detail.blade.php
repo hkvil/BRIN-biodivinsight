@@ -25,28 +25,54 @@
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <div class="bg-gray-200 p-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
+                <div class="bg-base-200 p-4 rounded-lg shadow">
                     <h4 class="text-lg font-semibold mb-2">Soil Data</h4>
                     <p class="mb-2">pH: {{$soil->pH ?? 'No Data'}}</p>
                     <p class="mb-2">moisture: {{$soil->moisture ?? 'No Data'}}</p>
                     <p class="mb-2">temperature: {{$soil->temperature ?? 'No Data'}}</p>
+                    <div class="mt-4 flex justify-end space-x-2">
+                    
+                    @if(isset($soil))
+                    <button class="btn btn-outline btn-primary delete-btn"data-id="{{ $soil->id }}" data-type="soil">Delete</button>
+                        <button class="btn btn-outline btn-secondary" 
+                                onclick="openModal('Soil', {{ json_encode($soil) }}, 'edit')">
+                            Edit
+                        </button>
+                    @else
+                        <button class="btn btn-outline btn-secondary" 
+                                onclick="openModal('Soil', null, 'add')">
+                            Add
+                        </button>
+                    @endif
+                    </div>
+
                 </div>
 
-                <div class="bg-gray-200 p-4">
+                <div class="bg-base-200 p-4 rounded-lg shadow">
                     <h4 class="text-lg font-semibold mb-2">Microclimate Data</h4>
                     <p class="mb-2">Temperature: {{$microclimate->temperature ?? 'No Data'}}</p>
                     <p class="mb-2">Humidity: {{$microclimate->humidity ?? 'No Data'}}</p>
                     <p class="mb-2">Light Intensity: {{$microclimate->pressure ?? 'No Data'}}</p>
-                </div>
+                    <div class="mt-4 flex justify-end space-x-2">
+                    
+                    @if(isset($microclimate))
+                    <button class="btn btn-outline btn-primary delete-btn" data-id="{{ $microclimate->id }}" data-type="microclimate">Delete</button>
+                        <button class="btn btn-outline btn-secondary" 
+                                onclick="openModal('Microclimate', {{ json_encode($microclimate) }}, 'edit')">
+                            Edit
+                        </button>
+                    @else
+                        <button class="btn btn-outline btn-secondary" 
+                                onclick="openModal('Microclimate', null, 'add')">
+                            Add
+                        </button>
+                    @endif
+                    </div>
 
-                <div class="bg-gray-200 p-4">
-                    <h4 class="text-lg font-semibold mb-2">Herbarium Data</h4>
-                    <p class="mb-2">FUTURE WORK</p>
-                    <!-- <p class="mb-2">Species Name: {{$herbarium->species_name ?? 'Placeholder Value'}}</p>
-                    <p class="mb-2">Family: {{$herbarium->family ?? 'Placeholder Value'}}</p>
-                    <p class="mb-2">Collector: {{$herbarium->collector ?? 'Placeholder Value'}}</p> -->
+
                 </div>
+                
             </div>
         </div>
     </div>
@@ -189,7 +215,7 @@
             const id = $(this).data('id');
             const url = '{{ route('leafPhy.destroy', ':id') }}'.replace(':id', id);
             const token = '{{ csrf_token() }}';
-
+            console.log("Delete button clicked for ID:", id);
             if (confirm('Are you sure you want to delete this?')) {
             $.ajax({
                 url: url,
@@ -208,6 +234,41 @@
             });
             }
         });
+
+        // Handle Delete button click for soil and microclimate
+        $('.delete-btn').on('click', function() {
+            const id = $(this).data('id');
+            const type = $(this).data('type');
+            let url = '';
+
+            if (type === 'soil') {
+                url = '{{ route('soil.destroy', ':id') }}'.replace(':id', id);
+            } else if (type === 'microclimate') {
+                url = '{{ route('microclimate.destroy', ':id') }}'.replace(':id', id);
+            }
+
+            const token = '{{ csrf_token() }}';
+
+            if (confirm('Are you sure you want to delete this?')) {
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    data: {
+                        _token: token
+                    },
+                    success: function(response) {
+                        console.log('Delete successful for ID:', id);
+                        // Remove the parent container (you can adjust the selector to target the correct element)
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        console.error('Delete failed for ID:', xhr);
+                        alert('Failed to delete the item. Please try again.');
+                    }
+                });
+            }
+        });
+
 
     function openModal(type, data = null,action = null) {
         const modalTitle = document.getElementById('modal-title');
@@ -276,6 +337,18 @@
                         <input type="text" name="temperature" id="temperature" class="mt-1 block w-full" autocomplete="off" required>
                     </div>
                 `;
+                if (action == 'edit') {
+                    form.innerHTML += '<input type="hidden" name="_method" value="PUT">'; // Spoof PUT method
+                    modalTitle.textContent = "Edit Soil";
+                    document.getElementById('ph').value = data.pH;
+                    document.getElementById('moisture').value = data.moisture;
+                    document.getElementById('temperature').value = data.temperature;
+                    form.action = '{{ route('soil.update', ':id') }}'.replace(':id', data.id);
+                }
+                if (action == 'add') {
+                    modalTitle.textContent = "Add New Soil Data";
+                    form.action = '{{ route('soil.store'), ':id' }}'.replace(':id', 1);
+                }
                 break;
             case 'Microclimate':
                 modalTitle.textContent = 'Add New Microclimate Data';
@@ -294,6 +367,18 @@
                         <input type="text" name="pressure" id="pressure" class="mt-1 block w-full" autocomplete="off" required>
                     </div>
                 `;
+                if (action == 'edit') {
+                    form.innerHTML += '<input type="hidden" name="_method" value="PUT">'; // Spoof PUT method
+                    modalTitle.textContent = "Edit Microclimate";
+                    document.getElementById('temperature').value = data.temperature;
+                    document.getElementById('humidity').value = data.humidity;
+                    document.getElementById('pressure').value = data.pressure;
+                    form.action = '{{ route('microclimate.update', ':id') }}'.replace(':id', data.id);
+                }
+                if (action == 'add') {
+                    modalTitle.textContent = "Add New Microclimate Data";
+                    form.action = '{{ route('microclimate.store'), ':id' }}'.replace(':id', 1);
+                }
                 break;
                 // Herbarium Section
         }
@@ -302,8 +387,9 @@
         document.getElementById('my_modal_5').showModal();
     }
 
-
+    window.openModal = openModal;
     });
+
 
 
 

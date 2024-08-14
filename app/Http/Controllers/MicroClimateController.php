@@ -63,7 +63,12 @@ class MicroClimateController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $microclimate = MicroClimate::findOrFail($id);
+        if ($microclimate) {
+            return response()->json(['success' => true, 'data' => $microclimate]);
+        } else {
+            return response()->json(['success' => false]);
+        }
     }
 
     /**
