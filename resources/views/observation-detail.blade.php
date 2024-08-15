@@ -28,9 +28,9 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
                 <div class="bg-base-200 p-4 rounded-lg shadow">
                     <h4 class="text-lg font-semibold mb-2">Soil Data</h4>
-                    <p class="mb-2">pH: {{$soil->pH ?? 'No Data'}}</p>
-                    <p class="mb-2">moisture: {{$soil->moisture ?? 'No Data'}}</p>
-                    <p class="mb-2">temperature: {{$soil->temperature ?? 'No Data'}}</p>
+                    <p id="soil_pH" class="mb-2">pH: {{$soil->pH ?? 'No Data'}}</p>
+                    <p id="soil_moisture" class="mb-2">moisture: {{$soil->moisture ?? 'No Data'}}</p>
+                    <p id="soil_temperature" class="mb-2">temperature: {{$soil->temperature ?? 'No Data'}}</p>
                     <div class="mt-4 flex justify-end space-x-2">
                     
                     @if(isset($soil))
@@ -182,8 +182,13 @@
             data: $(this).serialize(),
             success: function(response) {
                 if (response.success) {
+                // console.log(response.data)
+                location.reload();
                 table.ajax.reload(); // Reload the DataTable
                 document.getElementById('my_modal_5').close(); // Close the modal
+                // document.getElementById('soil_pH').innerText = `pH: ${response.data.pH}`;
+                // document.getElementById('soil_moisture').innerText = `moisture: ${response.data.moisture}`;
+                // document.getElementById('soil_temperature').innerText = `temperature: ${response.data.temperature}`;
                 }
             },
             error: function(xhr) {
@@ -325,8 +330,8 @@
                 form.action = '{{ route('soil.store') }}';
                 formFields.innerHTML = `
                     <div class="mb-4">
-                        <label for="ph" class="block text-sm font-medium text-gray-700">pH</label>
-                        <input type="text" name="ph" id="ph" class="mt-1 block w-full" autocomplete="off" required>
+                        <label for="pH" class="block text-sm font-medium text-gray-700">pH</label>
+                        <input type="text" name="pH" id="pH" class="mt-1 block w-full" autocomplete="off" required>
                     </div>
                     <div class="mb-4">
                         <label for="moisture" class="block text-sm font-medium text-gray-700">Moisture</label>
@@ -340,14 +345,15 @@
                 if (action == 'edit') {
                     form.innerHTML += '<input type="hidden" name="_method" value="PUT">'; // Spoof PUT method
                     modalTitle.textContent = "Edit Soil";
-                    document.getElementById('ph').value = data.pH;
+                    document.getElementById('pH').value = data.pH;
                     document.getElementById('moisture').value = data.moisture;
                     document.getElementById('temperature').value = data.temperature;
                     form.action = '{{ route('soil.update', ':id') }}'.replace(':id', data.id);
                 }
                 if (action == 'add') {
+                    form.innerHTML += '<input type="hidden" name="observation_id" value="{{$observation->id}}">';
                     modalTitle.textContent = "Add New Soil Data";
-                    form.action = '{{ route('soil.store'), ':id' }}'.replace(':id', 1);
+                    form.action = '{{ route('soil.store')}}';
                 }
                 break;
             case 'Microclimate':
@@ -376,8 +382,9 @@
                     form.action = '{{ route('microclimate.update', ':id') }}'.replace(':id', data.id);
                 }
                 if (action == 'add') {
+                    form.innerHTML += '<input type="hidden" name="observation_id" value="{{$observation->id}}">'; 
                     modalTitle.textContent = "Add New Microclimate Data";
-                    form.action = '{{ route('microclimate.store'), ':id' }}'.replace(':id', 1);
+                    form.action = '{{ route('microclimate.store')}}';
                 }
                 break;
                 // Herbarium Section

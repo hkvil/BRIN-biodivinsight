@@ -11,7 +11,7 @@ class Soil extends Model
 
     protected $fillable = [
         'observation_id',
-        'ph',
+        'pH',
         'moisture',
         'temperature'
     ];

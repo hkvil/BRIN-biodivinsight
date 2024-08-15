@@ -17,13 +17,8 @@ class SoilController extends Controller
 
 
 
-    public function store(Request $request, string $observationId)
+    public function store(Request $request)
     {
-        $existingSoil = Soil::where('observation_id', $observationId)->first();
-        if ($existingSoil) {
-            return response()->json(['error' => 'A Soil record already exists for this observation.'], 400);
-        }
-
         $request->validate([
             'moisture' => 'required',
             'pH' => 'required',
@@ -31,13 +26,13 @@ class SoilController extends Controller
         ]);
 
         Soil::create([
-            'observation_id' => $observationId,
+            'observation_id' => $request->observation_id,
             'moisture' => $request->moisture,
             'pH' => $request->pH,
             'temperature' => $request->temperature,
         ]);
 
-        return response()->json(['success' => 'Soil created successfully.']);
+        return response()->json(['success' => 'Soil created successfully.', 'data' => $request->all()]);
     }
 
     /**

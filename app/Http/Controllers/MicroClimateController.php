@@ -27,12 +27,8 @@ class MicroClimateController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, string $observationId)
+    public function store(Request $request)
     {
-        $existing = MicroClimate::where('observation_id', $observationId)->first();
-        if ($existing) {
-            return response()->json(['error' => 'A record already exists for this observation.'], 400);
-        }
         
         $request->validate([
             'temperature' => 'required',
@@ -41,13 +37,13 @@ class MicroClimateController extends Controller
         ]);
 
         MicroClimate::create([
-            'observation_id' => $observationId,
+            'observation_id' => $request->observation_id,
             'temperature' => $request->temperature,
             'humidity' => $request->humidity,
             'pressure' => $request->pressure,
         ]);
 
-        return response()->json(['success' => 'MicroClimate created successfully.']);
+        return response()->json(['success' => 'MicroClimate created successfully.', 'data' => $request->all()]);
     }
 
     /**
