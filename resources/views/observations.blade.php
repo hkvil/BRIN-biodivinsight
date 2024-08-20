@@ -33,7 +33,7 @@
     <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
         <div class="modal-box">
             <h3 class="text-lg font-bold" id="modal-title">Add New Data</h3>
-            <form id="general-form" method="POST" action="">
+            <form id="general-form" method="POST" action="'{{ route('observations.store') }}'">
                 @csrf
                 <div class="py-4" id="form-fields">
                     <!-- Dynamic form fields will be inserted here -->
@@ -254,6 +254,7 @@
                             } else if(selectId === 'location_id') {
                                 option.text = `${item.dusun}, ${item.desa}, ${item.kelurahan}, ${item.kecamatan}, ${item.kabupaten}, Altitude: ${item.altitude}, Longitude: ${item.longitude}, Latitude: ${item.latitude}`;
                             } else if (selectId === 'observation_type') {
+                                option.value = item;
                                 option.text = item;
                             }
                             select.appendChild(option);

@@ -59,6 +59,7 @@ class ObservationController extends Controller
     public function update(Request $request, string $id)
     {
         $observation = Observation::find($id);
+        $observation->observation_type = $request->input('observation_type');
         $observation->plant_id = $request->input('plant_id');
         $observation->location_id = $request->input('location_id');
         $observation->observation_date = $request->input('observation_date');
