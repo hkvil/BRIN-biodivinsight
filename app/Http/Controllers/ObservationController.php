@@ -75,7 +75,11 @@ class ObservationController extends Controller
     public function destroy(string $id)
     {
         $observation = Observation::find($id);
-        #Perlu pemikiran lebih lanjut
+        if($observation->observation_type == Observation::TYPE_LAB){
+            $observation->greenHouseMeasurement()->delete();
+            $observation->delete();
+            return response()->json(['success'=>'Observation deleted successfully.']);
+        }
         $observation->leafPhysiology()->delete();
         $observation->microclimate()->delete();
         $observation->soil()->delete();
