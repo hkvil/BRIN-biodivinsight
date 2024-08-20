@@ -11,15 +11,20 @@ use App\Models\Microclimate;
 use App\Models\Soil;
 use App\Models\Herbarium;
 use App\Models\Observation;
+use App\Models\GreenHouseMeasurement;
 
 class Observation extends Model
 {
     use HasFactory;
 
+    const TYPE_LAB = 'Lab Observation';
+    const TYPE_FIELD = 'Field Observation';
+
     protected $fillable = [
         'plant_id',
         'location_id',
         'remark_id',
+        'observation_type',
         'observation_date',
         'observation_time',
     ];
@@ -34,21 +39,29 @@ class Observation extends Model
         return $this->belongsTo(Location::class);
     }
 
-    public function leafPhysiology()
+    public function greenHouseMeasurement()
     {
-        return $this->hasMany(LeafPhysiology::class);
+        if($this->observation_type == self::TYPE_LAB){
+            return $this->hasOne(GreenHouseMeasurement::class);
+        }
+    }
+
+    public function leafPhysiology()
+    {   if($this->observation_type == self::TYPE_FIELD){
+            return $this->hasMany(LeafPhysiology::class);
+        }
     }
 
     public function microclimate(){
-        return $this->hasOne(Microclimate::class);
+        if($this->observation_type == self::TYPE_FIELD){
+            return $this->hasOne(Microclimate::class);
+        }
     }
 
     public function soil(){
-        return $this->hasOne(Soil::class);
-    }
-
-    public function herbarium(){
-        return $this->hasOne(Herbarium::class);
+        if($this->observation_type == self::TYPE_FIELD){
+            return $this->hasOne(Soil::class);
+        }
     }
 
     public function remarks(){

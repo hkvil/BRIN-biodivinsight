@@ -19,6 +19,14 @@ class ObservationController extends Controller
     public function detail($id)
     {
         $observation = Observation::find($id);
+        if($observation->observation_type == Observation::TYPE_LAB){
+            
+            return view('observation-detail', [
+                'observation' => $observation,
+                'leafPhy' => null
+            ]);
+        }
+        
         $soil = $observation->soil;
         $microclimate = $observation->microclimate;
         $leafPhysiology = $observation->leafPhysiology;
@@ -91,6 +99,7 @@ class ObservationController extends Controller
     public function store (Request $request)
     {
         $request->validate([
+            'observation_type' => 'required',
             'plant_id' => 'required',
             'location_id' => 'required',
             'observation_date' => 'required',
@@ -99,6 +108,7 @@ class ObservationController extends Controller
         ]);
 
         $observation = Observation::create([
+            'observation_type' => $request->observation_type,
             'plant_id' => $request->plant_id,
             'location_id' => $request->location_id,
             'observation_date' => $request->observation_date,
@@ -121,6 +131,11 @@ class ObservationController extends Controller
         {
             $plants = Plant::all(['id', 'species_name','common_name']);
             return response()->json($plants);
+        }
+
+        public function getObservationTypeS2(){
+            $observationTypes = [Observation::TYPE_LAB, Observation::TYPE_FIELD];
+            return response()->json($observationTypes);
         }
     
         public function getLocationsS2()

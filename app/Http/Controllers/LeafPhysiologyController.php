@@ -26,8 +26,7 @@ class LeafPhysiologyController extends Controller
     {
         if ($request->ajax()) {
             $observationId = $request->input('observation_id');
-            $leafs = LeafPhysiology::select('id', 'chlorophyll', 'nitrogen', 'leaf_moisture', 'leaf_temperature')
-                        ->where('observation_id', $observationId)
+            $leafs = LeafPhysiology::where('observation_id', $observationId)
                         ->get();
             return datatables()->of($leafs)->make(true);
         }
@@ -91,11 +90,6 @@ class LeafPhysiologyController extends Controller
      */
     public function destroy(string $id)
     {
-        // $leafPhysiology = LeafPhysiology::findOrFail($id);
-        // $leafPhysiology->delete();
-
-        // return response()->json(['success' => 'Leaf Physiology deleted successfully.']);
-
         try {
             $leafPhysiology = LeafPhysiology::findOrFail($id);
             $leafPhysiology->delete();

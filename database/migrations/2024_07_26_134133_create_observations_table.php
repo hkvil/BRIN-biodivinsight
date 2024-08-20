@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('plant_id')->constrained('plants');
             $table->foreignId('location_id')->constrained('locations');
-            // $table->foreignId('remark_id')->constrained('remarks');
             $table->unsignedBigInteger('remark_id')->nullable();
+            $table->enum('observation_type',['Lab Observation','Field Observation']);
             $table->date('observation_date');
             $table->time('observation_time');
             $table->timestamps();

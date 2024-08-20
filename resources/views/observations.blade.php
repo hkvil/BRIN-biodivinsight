@@ -14,6 +14,7 @@
                             <th>ID</th>
                             <th>Plant Name</th>
                             <th>Location Name</th>
+                            <th>Observation Type</th>
                             <th>Date</th>
                             <th>Time</th>
                             <th>Remarks</th>
@@ -63,6 +64,7 @@
                     { data: 'id', name: 'id' },
                     { data: 'plant_name', name: 'plant_name' },
                     { data: 'location_name', name: 'location_name' },
+                    { data: 'observation_type', name: 'observation_type' },
                     { data: 'observation_date', name: 'observation_date' },
                     { data: 'observation_time', name: 'observation_time' },
                     { data: 'remarks', name: 'remarks' },
@@ -175,6 +177,12 @@
 
         formFields.innerHTML = `
         <div class="mb-4">
+            <label for="observation_type" class="block text-sm font-medium text-gray-700">Observation Type</label>
+            <select name="observation_type" id="observation_type" class="mt-1 block w-full" required>
+                <!-- Options will be populated dynamically -->
+            </select>
+        </div>
+        <div class="mb-4">
             <label for="plant_id" class="block text-sm font-medium text-gray-700">Plant Name</label>
             <select name="plant_id" id="plant_id" class="mt-1 block w-full" required>
                 <!-- Options will be populated dynamically -->
@@ -222,6 +230,7 @@
             form.appendChild(methodInput);
         }
 
+        populateSelectOptions('observation_type', '/api/observation-types');
         populateSelectOptions('plant_id', '/api/plants');
         populateSelectOptions('location_id','/api/locations');
 
@@ -242,8 +251,10 @@
                             if(selectId === 'plant_id') {
                                 option.value = item.id;
                                 option.text = item.species_name + ' (' + item.common_name + ')';
-                            } else {
+                            } else if(selectId === 'location_id') {
                                 option.text = `${item.dusun}, ${item.desa}, ${item.kelurahan}, ${item.kecamatan}, ${item.kabupaten}, Altitude: ${item.altitude}, Longitude: ${item.longitude}, Latitude: ${item.latitude}`;
+                            } else if (selectId === 'observation_type') {
+                                option.text = item;
                             }
                             select.appendChild(option);
                         });

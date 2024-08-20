@@ -7,6 +7,7 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\LeafPhysiologyController;
 use App\Http\Controllers\SoilController;
 use App\Http\Controllers\MicroclimateController;
+use App\Http\Controllers\GreenHouseController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -51,8 +52,15 @@ Route::middleware([
     Route::resource('soil', SoilController::class);
     Route::resource('microclimate', MicroclimateController::class);
 
+    Route::get('/gh/data', [GreenHouseController::class, 'getGreenHouseMeasurements'])->name('gh.data');
+    Route::get('/gh/edit/{id}', [GreenHouseController::class, 'edit'])->name('gh.edit');
+    Route::put('/gh/update/{id}', [GreenHouseController::class, 'update'])->name('gh.update');
+    Route::delete('/gh/{id}', [GreenHouseController::class, 'destroy'])->name('gh.destroy');
+    Route::post('/gh/store', [GreenHouseController::class, 'store'])->name('gh.store');
+
     //Select2 Library route
     Route::get('/api/plants', [ObservationController::class, 'getPlantsS2'])->name('api.plants');
     Route::get('/api/locations', [ObservationController::class, 'getLocationsS2'])->name('api.locations');
+    Route::get('/api/observation-types', [ObservationController::class, 'getObservationTypeS2'])->name('api.observation-types');
 });
     
