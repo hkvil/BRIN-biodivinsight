@@ -222,6 +222,9 @@
             document.getElementById('observation_time').value = data.observation_time;
             document.getElementById('remarks').value = data.remarks.remarks;
 
+            document.getElementById('observation_type').value = data.observation_type;
+            document.getElementById('observation_type').disabled = true;
+            
             // Add the hidden input field for PUT method
             var methodInput = document.createElement('input');
             methodInput.type = 'hidden';
