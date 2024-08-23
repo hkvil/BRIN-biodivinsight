@@ -51,6 +51,7 @@ class DatabaseSeeder extends Seeder
 
         Observation::create([
             'id' => 1,
+            'user_id' => 1,
             'plant_id' => 1,
             'location_id' => 1,
             'remark_id' => 1,

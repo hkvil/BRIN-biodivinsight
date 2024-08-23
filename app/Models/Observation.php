@@ -11,8 +11,11 @@ use App\Models\Microclimate;
 use App\Models\Soil;
 use App\Models\Herbarium;
 use App\Models\Observation;
+use App\Models\Remark;
+use App\Models\User;
 use App\Models\GreenHouseMeasurement;
 use OwenIt\Auditing\Contracts\Auditable;
+
 
 class Observation extends Model implements Auditable
 {
@@ -23,6 +26,7 @@ class Observation extends Model implements Auditable
     const TYPE_FIELD = 'Field Observation';
 
     protected $fillable = [
+        'user_id',
         'plant_id',
         'location_id',
         'remark_id',
@@ -30,6 +34,11 @@ class Observation extends Model implements Auditable
         'observation_date',
         'observation_time',
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_observation');
+    }
 
     public function plant()
     {

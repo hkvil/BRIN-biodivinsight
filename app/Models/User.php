@@ -11,6 +11,7 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use OwenIt\Auditing\Contracts\Auditable;
 
+
 class User extends Authenticatable implements Auditable
 {
     use HasApiTokens;
@@ -64,4 +65,10 @@ class User extends Authenticatable implements Auditable
             'password' => 'hashed',
         ];
     }
+
+    public function observations()
+    {
+        return $this->belongsToMany(Observation::class,'user_observation');
+    }
+
 }

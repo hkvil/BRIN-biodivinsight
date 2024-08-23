@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('observations', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users');
             $table->foreignId('plant_id')->constrained('plants');
             $table->foreignId('location_id')->constrained('locations');
             $table->unsignedBigInteger('remark_id')->nullable();

@@ -8,6 +8,8 @@ use App\Models\Plant;
 use App\Models\Location;
 use App\Models\Remark;
 use App\Models\LeafPhysiology;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class ObservationController extends Controller
 {
@@ -42,7 +44,10 @@ class ObservationController extends Controller
     public function getObservations(Request $request)
     {
         if ($request->ajax()) {
-            $observations = Observation::with('plant', 'location','remarks')->get();
+            
+            $observations = Observation::with('plant', 'location', 'remarks')
+            ->get();
+
             return datatables()->of($observations)
                 ->addColumn('plant_name', function($row){
                     return $row->plant->species_name;
@@ -103,6 +108,8 @@ class ObservationController extends Controller
 
     public function store (Request $request)
     {
+        $userId = Auth::id();
+
         $request->validate([
             'observation_type' => 'required',
             'plant_id' => 'required',
@@ -113,12 +120,15 @@ class ObservationController extends Controller
         ]);
 
         $observation = Observation::create([
+            'user_id' => $userId,
             'observation_type' => $request->observation_type,
             'plant_id' => $request->plant_id,
             'location_id' => $request->location_id,
             'observation_date' => $request->observation_date,
             'observation_time' => $request->observation_time,
         ]);
+
+        $observation->users()->attach($userId);
 
         if ($request->has('remarks') && !empty($request->remarks)) {
             $remark = Remark::create([
