@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Observation;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class GreenHouseMeasurement extends Model
+class GreenHouseMeasurement extends Model implements Auditable
 {
     use HasFactory;
+    use \OwenIt\Auditing\Auditable;
 
     protected $table = 'gh_measurements';
     

@@ -12,10 +12,12 @@ use App\Models\Soil;
 use App\Models\Herbarium;
 use App\Models\Observation;
 use App\Models\GreenHouseMeasurement;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Observation extends Model
+class Observation extends Model implements Auditable
 {
     use HasFactory;
+    use \OwenIt\Auditing\Auditable;
 
     const TYPE_LAB = 'Lab Observation';
     const TYPE_FIELD = 'Field Observation';

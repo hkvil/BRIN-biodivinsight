@@ -8,6 +8,7 @@ use App\Http\Controllers\LeafPhysiologyController;
 use App\Http\Controllers\SoilController;
 use App\Http\Controllers\MicroclimateController;
 use App\Http\Controllers\GreenHouseController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,9 +19,9 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/data', [DashboardController::class, 'getActivityLogs'])->name('dashboard.data');
+
     Route::get('/observations', [ObservationController::class, 'index'])->name('observations');
     Route::get('/observations/data', [ObservationController::class, 'getObservations'])->name('observations.data');
     Route::get('/observation/{id}', [ObservationController::class, 'detail'])->name('observation.detail');

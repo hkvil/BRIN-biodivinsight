@@ -123,6 +123,11 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    // Laravel auto discovery laravel 5.5++
+    // 'providers' => [
+    // OwenIt\Auditing\AuditingServiceProvider::class,
+    //     ],
+
     // 'providers' => [
     // Yajra\DataTables\DataTablesServiceProvider::class,
     // ],
