@@ -68,7 +68,7 @@ class User extends Authenticatable implements Auditable
 
     public function observations()
     {
-        return $this->belongsToMany(Observation::class,'user_observation');
+        return $this->belongsToMany(Observation::class,'user_observation')->withPivot('is_owner');
     }
 
 }

@@ -27,37 +27,37 @@
     <h4 class="font-semibold text-lg text-gray-800 leading-tight mb-4">
         Users with Access
     </h4>
-    <ul id="user-list">
-        <!-- Placeholder User List -->
-        <li class="mb-2 flex items-center">
-            <span class="mr-4">User One</span>
-            <button class="btn btn-sm btn-danger remove-user-btn" data-user-id="1" data-observation-id="123">
-                <i class="fas fa-trash-alt"></i> Remove
-            </button>
-        </li>
-        <li class="mb-2 flex items-center">
-            <span class="mr-4">User Two</span>
-            <button class="btn btn-sm btn-danger remove-user-btn" data-user-id="2" data-observation-id="123">
-                <i class="fas fa-trash-alt"></i> Remove
-            </button>
-        </li>
-    </ul>
+    <ol id="user-list">
+    @foreach ($users as $user)
+                        <li class="mb-2 flex items-center">
+                            <span class="mr-4">{{ $user->email }}</span>
+                            @if($can_modify)
+                               @if($user->pivot->is_owner == 0)
+                                <button class="btn btn-sm btn-danger remove-user-btn" 
+                                        data-user-id="{{ $user->id }}" 
+                                        data-observation-id="{{ $observation->id }}">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                @endif
+                           @endif
+                        </li>
+    @endforeach
+    </ol>
     <!-- Add User Form -->
-    <form id="add-user-form" method="POST" action="#">
-        @csrf
-        <div class="flex items-center">
-            <select name="user_id" class="form-select mt-1 block w-full">
-                <!-- Placeholder User Options -->
-                <option value="3">User Three</option>
-                <option value="4">User Four</option>
-            </select>
-            <button type="submit" class="btn btn-sm btn-primary ml-2">
-                <i class="fas fa-plus"></i> Add User
-            </button>
-        </div>
-    </form>
-</div>
-
+                @if($can_modify)
+                <form id="add-user-form" method="POST" action="{{ route('observation.addUser', $observation->id) }}">
+                    @csrf
+                    <div class="flex items-center">
+                            <select name="user_id" id="user_id" class="form-select mt-1 block w-full">
+                            <!-- Options will be populated dynamically -->
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-primary ml-2">
+                                <i class="fas fa-plus"></i> Add User
+                            </button>
+                        </div>
+                    </form>
+                    @endif
+                </div>
             </div>
             </div>
         </div>
@@ -231,9 +231,32 @@
             });
             
         }
+
+  
+        function populateSelectOptions(apiUrl) {
+            const urlWithParams = `${apiUrl}?observation_id=${encodeURIComponent({{ $observation->id }})}`;
+                fetch(urlWithParams)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Data fetched:', data);
+                        const select = document.getElementById('user_id');
+                        data.forEach(item => {
+                            const option = document.createElement('option');
+                            option.value = item.id;
+                            option.text = item.email
+                            select.appendChild(option);
+                        });
+                        
+                        $('#user_id').chosen();
+                        
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            }
         
     $(document).ready(function() {
+        populateSelectOptions('/api/users');
         const canModify = @json($can_modify);
+        const observationId = @json($observation->id);
         // Initialize the DataTable
         const leafsColumns = [
             { data: 'id', name: 'id' },
@@ -385,6 +408,39 @@
             });
             }
         });
+
+        // Handle Remove User button click
+        $('.remove-user-btn').on('click', function() {
+            const userId = $(this).data('user-id');  // Get the user ID from the button's data attribute
+            const observationId = $(this).data('observation-id');  // Get the observation ID from the button's data attribute
+
+            const url = '{{ route('observation.detachUser', ['user' => ':user_id', 'observation' => ':observation_id']) }}'
+                        .replace(':user_id', userId)
+                        .replace(':observation_id', observationId);
+
+            const token = '{{ csrf_token() }}';
+
+            if (confirm('Are you sure you want to remove this user from the observation?')) {
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    data: {
+                        _token: token
+                    },
+                    success: function(response) {
+                        console.log('User removed successfully:', response);
+                        // Optionally, remove the user from the DOM
+                        location.reload();// Remove the closest list item
+
+                    },
+                    error: function(xhr) {
+                        console.error('Failed to remove user:', xhr);
+                        alert('Failed to remove the user. Please try again.');
+                    }
+                });
+            }
+        });
+
 
         // Handle Delete button click for soil and microclimate
         $('.delete-btn').on('click', function() {
@@ -666,9 +722,6 @@
 
     window.openModal = openModal;
     });
-
-
-
 
 </script>
 @endpush

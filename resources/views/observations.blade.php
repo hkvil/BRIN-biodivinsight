@@ -71,7 +71,6 @@
                     {
                     data: null,
                     name: 'action',
-                    orderable: false,
                     searchable: false,
                     render: function(data, type, row) {
                         let modifyButtons = '';

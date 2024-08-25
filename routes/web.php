@@ -29,6 +29,9 @@ Route::middleware([
     Route::delete('/observations/destroy/{id}', [ObservationController::class, 'destroy'])->name('observations.destroy');
     Route::post('/observations/store', [ObservationController::class, 'store'])->name('observations.store');
     Route::get('/observation/edit/{id}', [ObservationController::class, 'edit'])->name('observation.edit');
+    Route::post('/observations/{observationId}/add-user', [ObservationController::class, 'addUser'])->name('observation.addUser');
+    Route::delete('/observations/{observation}/users/{user}', [ObservationController::class, 'detachUser'])->name('observation.detachUser');
+
 
     Route::get('/plants', [PlantController::class, 'index'])->name('plants');
     Route::get('/plants/data', [PlantController::class, 'getPlants'])->name('plants.data');
@@ -63,5 +66,6 @@ Route::middleware([
     Route::get('/api/plants', [ObservationController::class, 'getPlantsS2'])->name('api.plants');
     Route::get('/api/locations', [ObservationController::class, 'getLocationsS2'])->name('api.locations');
     Route::get('/api/observation-types', [ObservationController::class, 'getObservationTypeS2'])->name('api.observation-types');
+    Route::get('/api/users', [ObservationController::class, 'getUsers'])->name('api.users');
 });
     

@@ -37,7 +37,7 @@ class Observation extends Model implements Auditable
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'user_observation');
+        return $this->belongsToMany(User::class, 'user_observation')->withPivot('is_owner');
     }
 
     public function plant()

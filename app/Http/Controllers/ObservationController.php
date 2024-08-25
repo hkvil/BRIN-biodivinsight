@@ -27,8 +27,9 @@ class ObservationController extends Controller
             
             return view('observation-detail', [
                 'observation' => $observation,
+                'users' => $observation->users,
+                'can_modify' => $can_modify,
                 'leafPhy' => null,
-                'can_modify' => $can_modify
             ]);
         }
         
@@ -38,6 +39,7 @@ class ObservationController extends Controller
         
         return view('observation-detail', [
         'observation' => $observation,
+        'users' => $observation->users,
         'soil' => $soil, 
         'microclimate' => $microclimate,
         'leafPhy' => $leafPhysiology,
@@ -145,7 +147,7 @@ class ObservationController extends Controller
             'observation_time' => $request->observation_time,
         ]);
 
-        $observation->users()->attach($userId);
+        $observation->users()->attach($userId, ['is_owner' => true]);
 
         if ($request->has('remarks') && !empty($request->remarks)) {
             $remark = Remark::create([
@@ -156,6 +158,40 @@ class ObservationController extends Controller
         }
 
         return response()->json(['success' => 'Observation created successfully.']);
+    }
+
+    public function addUser(Request $request, $observationId)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $userId = $request->input('user_id');
+
+        // Find the observation by ID
+        $observation = Observation::findOrFail($observationId);
+
+        // Attach the user to the observation
+        $observation->users()->attach($userId);
+
+        // Optionally return a response or redirect
+        return redirect()->back()->with('success', 'User added successfully.');
+    }
+
+    public function detachUser($observationId, $userId)
+    {
+        $observation = Observation::findOrFail($observationId);
+        $user = User::findOrFail($userId);
+
+        // Check if the current user can modify this observation
+        if (Auth::user()->cannot('delete', $observation)) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        // Detach the user from the observation
+        $observation->users()->detach($userId);
+
+        return response()->json(['success' => 'User removed successfully.']);
     }
 
         // Method for Select2 library
@@ -169,7 +205,30 @@ class ObservationController extends Controller
             $observationTypes = [Observation::TYPE_LAB, Observation::TYPE_FIELD];
             return response()->json($observationTypes);
         }
+
+        // public function getUsers()
+        // {
+        //     $users = User::all(['id', 'name', 'email']); 
     
+        //     return response()->json($users);
+        // }
+
+        public function getUsers(Request $request)
+        {
+            $observationId = $request->input('observation_id');
+            // $observationId = 2;
+            // Retrieve all users
+            $users = User::query()
+                // Exclude users already associated with the given observation
+                ->whereDoesntHave('observations', function ($query) use ($observationId) {
+                    $query->where('observation_id', $observationId);
+                })
+                ->get(['id', 'name', 'email']);
+            
+            return response()->json($users);
+        }
+
+
         public function getLocationsS2()
         {
             $locations = Location::all([
