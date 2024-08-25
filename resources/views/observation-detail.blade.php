@@ -7,6 +7,8 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
                 <h3 class="font-semibold text-lg text-gray-800 leading-tight mb-4">
                     Observation ID: {{$observation->id}}
                 </h3>
@@ -19,8 +21,47 @@
                 <p class="mb-4">
                     Plants Name: {{$observation->plant->species_name}}, {{$observation->plant->common_name}}
                 </p>
+                </div>
+                <!-- Users with Access Column -->
+<div>
+    <h4 class="font-semibold text-lg text-gray-800 leading-tight mb-4">
+        Users with Access
+    </h4>
+    <ul id="user-list">
+        <!-- Placeholder User List -->
+        <li class="mb-2 flex items-center">
+            <span class="mr-4">User One</span>
+            <button class="btn btn-sm btn-danger remove-user-btn" data-user-id="1" data-observation-id="123">
+                <i class="fas fa-trash-alt"></i> Remove
+            </button>
+        </li>
+        <li class="mb-2 flex items-center">
+            <span class="mr-4">User Two</span>
+            <button class="btn btn-sm btn-danger remove-user-btn" data-user-id="2" data-observation-id="123">
+                <i class="fas fa-trash-alt"></i> Remove
+            </button>
+        </li>
+    </ul>
+    <!-- Add User Form -->
+    <form id="add-user-form" method="POST" action="#">
+        @csrf
+        <div class="flex items-center">
+            <select name="user_id" class="form-select mt-1 block w-full">
+                <!-- Placeholder User Options -->
+                <option value="3">User Three</option>
+                <option value="4">User Four</option>
+            </select>
+            <button type="submit" class="btn btn-sm btn-primary ml-2">
+                <i class="fas fa-plus"></i> Add User
+            </button>
+        </div>
+    </form>
+</div>
+
+            </div>
             </div>
         </div>
+        
     </div>
 
     @if($observation->observation_type == 'Field Observation')
