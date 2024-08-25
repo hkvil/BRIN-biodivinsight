@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Locations') }}
+            Locations
         </h2>
     </x-slot>
 
@@ -11,15 +11,15 @@
                 <table id="locations-table" class="min-w-full divide-y divide-gray-200">
                     <thead>
                         <tr>
-                            <th>{{ __('ID') }}</th>
-                            <th>{{ __('Dusun') }}</th>
-                            <th>{{ __('Desa') }}</th>
-                            <th>{{ __('Kelurahan') }}</th>
-                            <th>{{ __('Kecamatan') }}</th>
-                            <th>{{ __('Kabupaten') }}</th>
-                            <th>{{ __('Altitude') }}</th>
-                            <th>{{ __('Longitude') }}</th>
-                            <th>{{ __('Latitude') }}</th>
+                            <th>ID</th>
+                            <th>Dusun</th>
+                            <th>Desa</th>
+                            <th>Kelurahan</th>
+                            <th>Kecamatan</th>
+                            <th>Kabupaten</th>
+                            <th>Altitude</th>
+                            <th>Longitude</th>
+                            <th>Latitude</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -39,36 +39,36 @@
                 <input type="hidden" id="location-id" name="id">
                 <div class="py-4">
                     <div class="mb-4">
-                        <label for="dusun" class="block text-sm font-medium text-gray-700">Dusun Name</label>
+                        <label for="dusun" class="block text-sm font-medium text-gray-700">Dusun</label>
                         <input type="text" name="dusun" id="dusun" class="mt-1 block w-full" maxlength="15" autocomplete="off" required>
                     </div>
                     <div class="mb-4">
-                        <label for="desa" class="block text-sm font-medium text-gray-700">Desa Name</label>
+                        <label for="desa" class="block text-sm font-medium text-gray-700">Desa</label>
                         <input type="text" name="desa" id="desa" class="mt-1 block w-full" maxlength="15" autocomplete="off" required>
                     </div>
                     <div class="mb-4">
-                        <label for="kelurahan" class="block text-sm font-medium text-gray-700">Kelurahan Name</label>
+                        <label for="kelurahan" class="block text-sm font-medium text-gray-700">Kelurahan</label>
                         <input type="text" name="kelurahan" id="kelurahan" class="mt-1 block w-full" maxlength="15" autocomplete="off" required>
                     </div>
                     <div class="mb-4">
-                        <label for="kecamatan" class="block text-sm font-medium text-gray-700">Kecamatan Name</label>
+                        <label for="kecamatan" class="block text-sm font-medium text-gray-700">Kecamatan</label>
                         <input type="text" name="kecamatan" id="kecamatan" class="mt-1 block w-full" maxlength="15" autocomplete="off" required>
                     </div>
                     <div class="mb-4">
-                        <label for="kabupaten" class="block text-sm font-medium text-gray-700">Kabupaten Name</label>
+                        <label for="kabupaten" class="block text-sm font-medium text-gray-700">Kabupaten</label>
                         <input type="text" name="kabupaten" id="kabupaten" class="mt-1 block w-full" maxlength="15" autocomplete="off" required>
                     </div>
                     <div class="mb-4">
                         <label for="altitude" class="block text-sm font-medium text-gray-700">Altitude</label>
-                        <input type="number" name="altitude" id="altitude" class="mt-1 block w-full" maxlength="10" step="0.0001" autocomplete="off" required>
+                        <input type="number" name="altitude" id="altitude" class="mt-1 block w-full"  autocomplete="off" required>
                     </div>
                     <div class="mb-4">
                         <label for="longitude" class="block text-sm font-medium text-gray-700">Longitude</label>
-                        <input type="number" name="longitude" id="longitude" class="mt-1 block w-full" maxlength="10" step="0.0001" autocomplete="off" required>
+                        <input type="number" name="longitude" id="longitude" class="mt-1 block w-full" maxlength="10" step="0.0000001" autocomplete="off" required>
                     </div>
                     <div class="mb-4">
                         <label for="latitude" class="block text-sm font-medium text-gray-700">Latitude</label>
-                        <input type="number" name="latitude" id="latitude" class="mt-1 block w-full" maxlength="10" step="0.0001" autocomplete="off" required>
+                        <input type="number" name="latitude" id="latitude" class="mt-1 block w-full" maxlength="10" step="0.0000001" autocomplete="off" required>
                     </div>
                 </div>
                 <div class="modal-action">
