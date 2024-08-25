@@ -21,11 +21,14 @@ class ObservationController extends Controller
     public function detail($id)
     {
         $observation = Observation::find($id);
+        $can_modify = Auth::user()->can('delete', $observation);
+
         if($observation->observation_type == Observation::TYPE_LAB){
             
             return view('observation-detail', [
                 'observation' => $observation,
-                'leafPhy' => null
+                'leafPhy' => null,
+                'can_modify' => $can_modify
             ]);
         }
         
@@ -37,7 +40,8 @@ class ObservationController extends Controller
         'observation' => $observation,
         'soil' => $soil, 
         'microclimate' => $microclimate,
-        'leafPhy' => $leafPhysiology
+        'leafPhy' => $leafPhysiology,
+        'can_modify' => $can_modify
     ]);
     }
 
@@ -56,7 +60,10 @@ class ObservationController extends Controller
                     return $row->location->desa;
                 })->addColumn('remarks', function($row){
                     return $row->remarks->remarks;
-                })->make(true);
+                })->addColumn('can_modify', function($row) {
+                    return Auth::user()->can('delete', $row);
+                })
+                ->make(true);
                 
         }
     }
@@ -64,6 +71,9 @@ class ObservationController extends Controller
     public function update(Request $request, string $id)
     {
         $observation = Observation::find($id);
+        if (Auth::user()->cannot('update', $observation)) {
+            abort(403);
+        }
         $observation->observation_type = $request->input('observation_type');
         $observation->plant_id = $request->input('plant_id');
         $observation->location_id = $request->input('location_id');
@@ -80,6 +90,10 @@ class ObservationController extends Controller
     public function destroy(string $id)
     {
         $observation = Observation::find($id);
+        if (Auth::user()->cannot('delete', $observation)) {
+            abort(403);
+        }
+
         if($observation->observation_type == Observation::TYPE_LAB){
             $observation->greenHouseMeasurement()->delete();
             $observation->delete();
@@ -95,6 +109,9 @@ class ObservationController extends Controller
     public function edit(string $id)
     {
         $observation = Observation::find($id);
+        if (Auth::user()->cannot('update', $observation)) {
+            abort(403);
+        }
         $plants = Plant::all();
         $locations = Location::all();
         $remarks = $observation->remarks;

@@ -74,13 +74,19 @@
                     orderable: false,
                     searchable: false,
                     render: function(data, type, row) {
+                        let modifyButtons = '';
+                        if (row.can_modify) {
+                            modifyButtons = `
+                            <button class="btn btn-sm btn-primary edit-btn" data-id="${row.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger delete-btn" data-id="${row.id}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            `;
+                        }
                         return `
-                        <button class="btn btn-sm btn-primary edit-btn" data-id="${row.id}">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-danger delete-btn" data-id="${row.id}">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
+                        ${modifyButtons}
                         <button class="btn btn-sm btn-info detail-btn" data-id="${row.id}">
                             <i class="fas fa-info-circle"></i>
                         </button>
@@ -224,7 +230,7 @@
 
             document.getElementById('observation_type').value = data.observation_type;
             document.getElementById('observation_type').disabled = true;
-            
+
             // Add the hidden input field for PUT method
             var methodInput = document.createElement('input');
             methodInput.type = 'hidden';

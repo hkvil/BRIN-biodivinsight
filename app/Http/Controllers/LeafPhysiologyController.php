@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\LeafPhysiology;
+use Illuminate\Support\Facades\Auth;
 
 class LeafPhysiologyController extends Controller
 {
@@ -28,7 +29,12 @@ class LeafPhysiologyController extends Controller
             $observationId = $request->input('observation_id');
             $leafs = LeafPhysiology::where('observation_id', $observationId)
                         ->get();
-            return datatables()->of($leafs)->make(true);
+            return datatables()
+            ->of($leafs)
+            ->addColumn('can_modify', function($row) {
+                return Auth::user()->can('delete', $row);
+            })
+            ->make(true);
         }
     }
 

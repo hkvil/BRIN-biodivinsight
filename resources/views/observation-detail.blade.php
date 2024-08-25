@@ -34,6 +34,7 @@
                     <p id="soil_temperature" class="mb-2">temperature: {{$soil->temperature ?? 'No Data'}}</p>
                     <div class="mt-4 flex justify-end space-x-2">
                     
+                    @if($can_modify)
                     @if(isset($soil))
                     <button class="btn btn-outline btn-primary delete-btn"data-id="{{ $soil->id }}" data-type="soil">Delete</button>
                         <button class="btn btn-outline btn-secondary" 
@@ -46,6 +47,7 @@
                             Add
                         </button>
                     @endif
+                    @endif
                     </div>
 
                 </div>
@@ -56,7 +58,7 @@
                     <p class="mb-2">Humidity: {{$microclimate->humidity ?? 'No Data'}}</p>
                     <p class="mb-2">Light Intensity: {{$microclimate->pressure ?? 'No Data'}}</p>
                     <div class="mt-4 flex justify-end space-x-2">
-                    
+                    @if($can_modify)
                     @if(isset($microclimate))
                     <button class="btn btn-outline btn-primary delete-btn" data-id="{{ $microclimate->id }}" data-type="microclimate">Delete</button>
                         <button class="btn btn-outline btn-secondary" 
@@ -68,6 +70,7 @@
                                 onclick="openModal('Microclimate', null, 'add')">
                             Add
                         </button>
+                    @endif
                     @endif
                     </div>
 
@@ -116,7 +119,9 @@
                             <th>Mean BK Akar</th>
                             <th>Stddev BK Akar</th>
                             @endif
+                            @if($can_modify)
                             <th>Action</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -149,6 +154,7 @@
 <script>
             let table;
             function initializeDataTable(tableId, ajaxUrl, columns){
+            let can_modify = @json($can_modify);
             table = $(tableId).DataTable({
                 processing: true,
                 serverSide: true,
@@ -169,11 +175,12 @@
                             {
                                 text: 'Add New Data',
                                 action: function (e, dt, node, config) {
-                                    // openModal('LeafPhy',null,'add');
-                                    if ('{{ $observation->observation_type }}' == 'Field Observation') {
+                                    if(can_modify){
+                                        if ('{{ $observation->observation_type }}' == 'Field Observation') {
                                         openModal('LeafPhy',null,'add');
-                                    } else if ('{{ $observation->observation_type }}' == 'Lab Observation') {
+                                        } else if ('{{ $observation->observation_type }}' == 'Lab Observation') {
                                         openModal('GH',null,'add');}
+                                    }
                                 }
                             }
                         ]
@@ -181,9 +188,11 @@
                 },
                 scrollX: true
             });
+            
         }
         
     $(document).ready(function() {
+        const canModify = @json($can_modify);
         // Initialize the DataTable
         const leafsColumns = [
             { data: 'id', name: 'id' },
@@ -197,14 +206,18 @@
                 orderable: false,
                 searchable: false,
                 render: function(data, type, row) {
-                    return `
-                    <button class="btn btn-sm btn-primary edit-btn" data-id="${row.id}">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger delete-btn" data-id="${row.id}">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                `;
+                    let modifyButtons = '';
+                    if (row.can_modify) {
+                        modifyButtons = `
+                        <button class="btn btn-sm btn-primary edit-btn" data-id="${row.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger delete-btn" data-id="${row.id}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        `;
+                    }
+                    return modifyButtons;
                 }
             }
         ];
