@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('observation_id')->constrained()->onDelete('cascade');
+            $table->boolean('is_owner')->default(false);
             $table->timestamps();
         });
     }
