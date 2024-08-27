@@ -9,6 +9,7 @@ use App\Http\Controllers\SoilController;
 use App\Http\Controllers\MicroclimateController;
 use App\Http\Controllers\GreenHouseController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ManageUserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,6 +22,13 @@ Route::middleware([
 ])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/data', [DashboardController::class, 'getActivityLogs'])->name('dashboard.data');
+
+    Route::get('/users', [ManageUserController::class, 'index'])->name('users');
+    Route::get('/users/data', [ManageUserController::class, 'getUsers'])->name('users.data');
+    Route::delete('/users/destroy/{id}', [ManageUserController::class, 'destroy'])->name('users.destroy');
+    Route::post('/users/store', [ManageUserController::class, 'store'])->name('users.store');
+    Route::get('/users/edit/{id}', [ManageUserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/update/{id}', [ManageUserController::class, 'update'])->name('users.update');
 
     Route::get('/observations', [ObservationController::class, 'index'])->name('observations');
     Route::get('/observations/data', [ObservationController::class, 'getObservations'])->name('observations.data');
@@ -62,10 +70,10 @@ Route::middleware([
     Route::delete('/gh/{id}', [GreenHouseController::class, 'destroy'])->name('gh.destroy');
     Route::post('/gh/store', [GreenHouseController::class, 'store'])->name('gh.store');
 
-    //Select2 Library route
-    Route::get('/api/plants', [ObservationController::class, 'getPlantsS2'])->name('api.plants');
-    Route::get('/api/locations', [ObservationController::class, 'getLocationsS2'])->name('api.locations');
-    Route::get('/api/observation-types', [ObservationController::class, 'getObservationTypeS2'])->name('api.observation-types');
+    //API to populate options in the select dropdowns
+    Route::get('/api/plants', [ObservationController::class, 'getPlants'])->name('api.plants');
+    Route::get('/api/locations', [ObservationController::class, 'getLocations'])->name('api.locations');
+    Route::get('/api/observation-types', [ObservationController::class, 'getObservationType'])->name('api.observation-types');
     Route::get('/api/users', [ObservationController::class, 'getUsers'])->name('api.users');
 });
     

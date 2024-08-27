@@ -18,7 +18,7 @@
                             <th>Date</th>
                             <th>Time</th>
                             <th>Remarks</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -29,7 +29,7 @@
         </div>
     </div>
 
-            <!-- Add New Data Modal -->
+    <!-- Add New Data Modal -->
     <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
         <div class="modal-box">
             <h3 class="text-lg font-bold" id="modal-title">Add New Data</h3>
@@ -132,7 +132,7 @@
                 });
             });
 
-            $('#general-form').on('submit', function(e) {
+         $('#general-form').on('submit', function(e) {
             e.preventDefault();
             $.ajax({
                 url: $(this).attr('action'),

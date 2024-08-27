@@ -20,6 +20,7 @@
                             <th>Altitude</th>
                             <th>Longitude</th>
                             <th>Latitude</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>

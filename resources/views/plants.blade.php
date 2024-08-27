@@ -14,7 +14,7 @@
                             <th>{{ __('ID') }}</th>
                             <th>{{ __('Species Name') }}</th>
                             <th>{{ __('Common Name') }}</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>

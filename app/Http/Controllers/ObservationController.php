@@ -195,13 +195,13 @@ class ObservationController extends Controller
     }
 
         // Method for Select2 library
-        public function getPlantsS2()
+        public function getPlants()
         {
             $plants = Plant::all(['id', 'species_name','common_name']);
             return response()->json($plants);
         }
 
-        public function getObservationTypeS2(){
+        public function getObservationType(){
             $observationTypes = [Observation::TYPE_LAB, Observation::TYPE_FIELD];
             return response()->json($observationTypes);
         }
@@ -229,7 +229,7 @@ class ObservationController extends Controller
         }
 
 
-        public function getLocationsS2()
+        public function getLocations()
         {
             $locations = Location::all([
                 'id',
