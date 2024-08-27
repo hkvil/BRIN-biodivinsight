@@ -15,6 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -23,12 +24,12 @@ Route::middleware([
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/data', [DashboardController::class, 'getActivityLogs'])->name('dashboard.data');
 
-    Route::get('/users', [ManageUserController::class, 'index'])->name('users');
-    Route::get('/users/data', [ManageUserController::class, 'getUsers'])->name('users.data');
-    Route::delete('/users/destroy/{id}', [ManageUserController::class, 'destroy'])->name('users.destroy');
-    Route::post('/users/store', [ManageUserController::class, 'store'])->name('users.store');
-    Route::get('/users/edit/{id}', [ManageUserController::class, 'edit'])->name('users.edit');
-    Route::put('/users/update/{id}', [ManageUserController::class, 'update'])->name('users.update');
+    Route::get('/users', [ManageUserController::class, 'index'])->name('users')->middleware('can:manage-users');
+    Route::get('/users/data', [ManageUserController::class, 'getUsers'])->name('users.data')->middleware('can:manage-users');
+    Route::delete('/users/destroy/{id}', [ManageUserController::class, 'destroy'])->name('users.destroy')->middleware('can:manage-users');
+    Route::post('/users/store', [ManageUserController::class, 'store'])->name('users.store')->middleware('can:manage-users');
+    Route::get('/users/edit/{id}', [ManageUserController::class, 'edit'])->name('users.edit')->middleware('can:manage-users');
+    Route::put('/users/update/{id}', [ManageUserController::class, 'update'])->name('users.update')->middleware('can:manage-users');
 
     Route::get('/observations', [ObservationController::class, 'index'])->name('observations');
     Route::get('/observations/data', [ObservationController::class, 'getObservations'])->name('observations.data');

@@ -66,6 +66,11 @@ class User extends Authenticatable implements Auditable
         ];
     }
 
+    public function getRoleAttribute()
+    {
+        return $this->attributes['role'];
+    }
+
     public function observations()
     {
         return $this->belongsToMany(Observation::class,'user_observation')->withPivot('is_owner');
