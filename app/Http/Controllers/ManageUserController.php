@@ -63,6 +63,7 @@ class ManageUserController extends Controller
         $data = request()->validate([
             'name' => 'required',
             'email' => 'required|email',
+            'password'=>'nullable'
         ]);
 
         $user = User::find($id);

@@ -107,9 +107,6 @@
                         <button class="btn btn-sm btn-danger delete-btn" data-id="${row.id}">
                             <i class="fas fa-trash-alt"></i>
                         </button>
-                        <button class="btn btn-sm btn-info detail-btn" data-id="${row.id}">
-                            <i class="fas fa-info-circle"></i>
-                        </button>
                         `;
                     }
                 }
@@ -147,29 +144,74 @@
                     }
                 });
             });
+            $('#general-form').on('submit', function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: $(this).attr('action'),
+                method: $(this).attr('method'),
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        // showSuccessAlert("Added");
+                        table.ajax.reload(); // Reload the DataTable
+                        document.getElementById('my_modal_5').close(); // Close the modal
+                    }
+                },
+                error: function(xhr) {
+                    console.error(xhr.responseText); // log the error for debugging
+                }
+            });
+        });
+        // Handle Delete button click
+        $('#users-table').on('click', '.delete-btn', function() {
+            const id = $(this).data('id');
+            const url = '{{ route('users.destroy', '') }}/' + id;
+            const token = '{{ csrf_token() }}';
+
+            if (confirm('Are you sure you want to delete this user?')) {
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    data: {
+                        _token: token
+                    },
+                    success: function(response) {
+                        console.log('Delete successful for ID:', id);
+                        table.ajax.reload();
+                    },
+                    error: function(xhr) {
+                        console.error('Delete failed for ID:', id);
+                        alert('Failed to delete. Please try again.');
+                    }
+                });
+            }
+        });
+
 
         function openModal(action, data = null) {
         console.log('Modal opened');
         const modalTitle = document.getElementById('modal-title');
         const form = document.getElementById('general-form');
         const formFields = document.getElementById('form-fields');
-
-        formFields.innerHTML = `
+        let id = `        
         <div class="mb-4">
             <label for="id" class="block text-sm font-medium text-gray-700">ID</label>
             <input type="text" name="id" id="id" class="mt-1 block w-full" autocomplete="off" required>
-        </div>
+        </div>`;
+
+        formFields.innerHTML = `
+        ${action === 'edit' ? id : ''}
         <div class="mb-4">
             <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-            <input type="text" name="name" id="name" class="mt-1 block w-full" autocomplete="off" required>
+            <input type="text" name="name" id="name" class="mt-1 block w-full" autocomplete="off">
         </div>
         <div class="mb-4">
             <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-            <input type="email" name="email" id="email" class="mt-1 block w-full" autocomplete="off" required>
+            <input type="email" name="email" id="email" class="mt-1 block w-full" autocomplete="off">
         </div>
         <div class="mb-4">
             <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-            <input type="password" name="password" id="password" class="mt-1 block w-full" autocomplete="off" required>
+            <input type="password" name="password" id="password" class="mt-1 block w-full" autocomplete="off">
         </div>
     `;
 
