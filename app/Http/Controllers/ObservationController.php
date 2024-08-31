@@ -76,7 +76,7 @@ class ObservationController extends Controller
         if (Auth::user()->cannot('update', $observation)) {
             abort(403);
         }
-        $observation->observation_type = $request->input('observation_type');
+    
         $observation->plant_id = $request->input('plant_id');
         $observation->location_id = $request->input('location_id');
         $observation->observation_date = $request->input('observation_date');

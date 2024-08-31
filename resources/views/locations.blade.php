@@ -61,7 +61,7 @@
                     </div>
                     <div class="mb-4">
                         <label for="altitude" class="block text-sm font-medium text-gray-700">Altitude</label>
-                        <input type="number" name="altitude" id="altitude" class="mt-1 block w-full"  autocomplete="off" required>
+                        <input type="number" name="altitude" id="altitude" class="mt-1 block w-full"  autocomplete="off" step="0.01" required>
                     </div>
                     <div class="mb-4">
                         <label for="longitude" class="block text-sm font-medium text-gray-700">Longitude</label>

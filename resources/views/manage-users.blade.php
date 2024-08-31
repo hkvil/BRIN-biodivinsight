@@ -236,7 +236,7 @@
             form.appendChild(methodInput);
         }
 
-        document.getElementById('my_modal_5').showModal();
+        document.getElementById('my_modal_5')Modal();.show
         
     }
         });
