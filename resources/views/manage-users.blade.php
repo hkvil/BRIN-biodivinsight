@@ -8,12 +8,12 @@
     <div class = "pt-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
     <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
             <!-- Card 1 -->
             <div class="bg-base-200 p-4 rounded-lg shadow flex justify-between items-center">
                 <div>
-                    <h4 class="text-lg font-semibold mb-1">Total Observations</h4>
-                    <p class="text-lg text-gray-600">99</p>
+                    <h4 class="text-lg font-semibold mb-1">Total Users</h4>
+                    <p class="text-lg text-gray-600">{{$userCount}}</p>
                 </div>
                 <i class="fas fa-binoculars text-green-500 text-2xl"></i>
             </div>
@@ -21,20 +21,13 @@
             <!-- Card 2 -->
             <div class="bg-base-200 p-4 rounded-lg shadow flex justify-between items-center">
                 <div>
-                    <h4 class="text-lg font-semibold mb-1">Total Plants</h4>
-                    <p class="text-lg text-gray-600">99</p>
+                    <h4 class="text-lg font-semibold mb-1">Total Admins</h4>
+                    <p class="text-lg text-gray-600">{{$adminCount}}</p>
                 </div>
                 <i class="fas fa-leaf text-blue-500 text-2xl"></i>
             </div>
 
-            <!-- Card 3 -->
-            <div class="bg-base-200 p-4 rounded-lg shadow flex justify-between items-center">
-                <div>
-                    <h4 class="text-lg font-semibold mb-1">Total Locations</h4>
-                    <p class="text-lg text-gray-600">99</p>
-                </div>
-                <i class="fas fa-map-marker-alt text-red-500 text-2xl"></i>
-            </div>
+  
         </div>
     </div>
 </div>
@@ -48,6 +41,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Role</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Actions</th>
@@ -93,6 +87,7 @@
                 },
                 columns: [
                     { data: 'id', name: 'id' },
+                    { data: 'role', name: 'role' },
                     { data: 'name', name: 'name' },
                     { data: 'email', name: 'email' },
                     {
@@ -146,6 +141,8 @@
             });
             $('#general-form').on('submit', function(e) {
             e.preventDefault();
+            const submitButton = $(this).find('button[type="submit"]');
+            submitButton.prop('disabled', true);
             $.ajax({
                 url: $(this).attr('action'),
                 method: $(this).attr('method'),
@@ -236,7 +233,7 @@
             form.appendChild(methodInput);
         }
 
-        document.getElementById('my_modal_5')Modal();.show
+        document.getElementById('my_modal_5').showModal();
         
     }
         });

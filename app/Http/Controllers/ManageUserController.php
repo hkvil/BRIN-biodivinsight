@@ -9,7 +9,10 @@ class ManageUserController extends Controller
 {
     public function index()
     {
-        return view('manage-users');
+        $adminCount = User::where('role', 'admin')->count();
+        $userCount = User::where('role', 'user')->count();
+
+        return view('manage-users', compact('adminCount', 'userCount'));
     }
 
     public function getUsers(Request $request)
