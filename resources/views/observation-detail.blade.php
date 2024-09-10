@@ -337,6 +337,8 @@
         // Handle form submission
         $('#general-form').on('submit', function(e) {
             e.preventDefault();
+            const submitButton = $(this).find('button[type="submit"]');
+            submitButton.prop('disabled', true);
             $.ajax({
             url: $(this).attr('action'),
             method: $(this).attr('method'),
