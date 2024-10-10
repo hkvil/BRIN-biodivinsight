@@ -71,7 +71,7 @@ Route::middleware([
     Route::delete('/gh/{id}', [GreenHouseController::class, 'destroy'])->name('gh.destroy');
     Route::post('/gh/store', [GreenHouseController::class, 'store'])->name('gh.store');
 
-    //API to populate options in the select dropdowns
+    
     Route::get('/api/plants', [ObservationController::class, 'getPlants'])->name('api.plants');
     Route::get('/api/locations', [ObservationController::class, 'getLocations'])->name('api.locations');
     Route::get('/api/observation-types', [ObservationController::class, 'getObservationType'])->name('api.observation-types');

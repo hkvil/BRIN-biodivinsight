@@ -254,9 +254,12 @@
             }
         
     $(document).ready(function() {
-        populateSelectOptions('/api/users');
         const canModify = @json($can_modify);
+        console.log('Can modify:', canModify);
         const observationId = @json($observation->id);
+        if(canModify){
+            populateSelectOptions('/api/users');
+        }
         // Initialize the DataTable
         const leafsColumns = [
             { data: 'id', name: 'id' },
@@ -270,18 +273,18 @@
                 orderable: false,
                 searchable: false,
                 render: function(data, type, row) {
-                    let modifyButtons = '';
-                    if (row.can_modify) {
-                        modifyButtons = `
+                    if(canModify){
+                        return `
                         <button class="btn btn-sm btn-primary edit-btn" data-id="${row.id}">
                             <i class="fas fa-edit"></i>
                         </button>
                         <button class="btn btn-sm btn-danger delete-btn" data-id="${row.id}">
                             <i class="fas fa-trash-alt"></i>
                         </button>
-                        `;
+                    `;
+                    }else{
+                        return '';
                     }
-                    return modifyButtons;
                 }
             }
         ];
@@ -308,21 +311,24 @@
             { data: 'bk_akar', name: 'bk_akar' },
             { data: 'mean_bk_akar', name: 'mean_bk_akar' },
             { data: 'stddev_bk_akar', name: 'stddev_bk_akar' },
-            
             {
                 data: null,
                 name: 'action',
                 orderable: false,
                 searchable: false,
                 render: function(data, type, row) {
-                    return `
-                    <button class="btn btn-sm btn-primary edit-btn" data-id="${row.id}">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger delete-btn" data-id="${row.id}">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                `;
+                    if(canModify){
+                        return `
+                        <button class="btn btn-sm btn-primary edit-btn" data-id="${row.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger delete-btn" data-id="${row.id}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    `;
+                    }else{
+                        return '';
+                    }
                 }
             }
         ];
