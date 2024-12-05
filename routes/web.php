@@ -6,7 +6,7 @@ use App\Http\Controllers\PlantController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\LeafPhysiologyController;
 use App\Http\Controllers\SoilController;
-use App\Http\Controllers\MicroclimateController;
+use App\Http\Controllers\MicroClimateController;
 use App\Http\Controllers\GreenHouseController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ManageUserController;

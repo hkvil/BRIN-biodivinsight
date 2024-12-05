@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Plant;
 use App\Models\Location;
 use App\Models\LeafPhysiology;
-use App\Models\Microclimate;
+use App\Models\MicroClimate;
 use App\Models\Soil;
 use App\Models\Herbarium;
 use App\Models\Observation;
@@ -65,7 +65,7 @@ class Observation extends Model implements Auditable
 
     public function microclimate(){
         if($this->observation_type == self::TYPE_FIELD){
-            return $this->hasOne(Microclimate::class);
+            return $this->hasOne(MicroClimate::class);
         }
     }
 
